@@ -1,4 +1,4 @@
-from varga import get_varga
+from varga import VargaCalculator, ZODIAC_SIGNS, get_varga
 
 
 def test_navamsa_rules():
@@ -18,3 +18,11 @@ def test_uniform_division():
     d12 = get_varga("D12")
     assert d12(0.0) == "Aries"
     assert d12(150.0) in {"Virgo", "Libra"}
+
+
+def test_varga_calculator_returns_degree_information():
+    calc = VargaCalculator(divisions=("D9",))
+    placements = calc.compute({"Sun": 123.5})
+    sun_navamsa = placements["D9"]["Sun"]
+    assert sun_navamsa.sign in ZODIAC_SIGNS
+    assert 0.0 <= sun_navamsa.degree < 30.0
