@@ -1,0 +1,159 @@
+Python Astrology Software Implementation Plan and Codex Prompt
+Introduction
+DrikPanchang’s online Kundali utility allows users to generate detailed Vedic horoscopes that include multiple divisional charts, planetary details and a variety of strength calculations. The user has requested a comprehensive plan for building a Python‑based astrology program with a graphical interface that replicates the features of the DrikPanchang Kundali page and additionally provides an AI‑driven time‑selection tool based on astrological principles. This document summarises the features observed on the DrikPanchang site, explains key astrological computations such as Shadbala and Bhavabala, outlines a modular software design and provides a detailed prompt for OpenAI Codex to generate the core application code. Citations are included where relevant pages define the features and algorithms that need to be implemented.
+1 Features Observed on DrikPanchang’s Kundali Page
+1.1 Overview of Tabs and Tools
+When a kundali is generated on the DrikPanchang site, a series of tabs appears across the top of the page. Each tab opens a section with specific calculations or charts. These tabs include Chart, Graha, Upagraha, Yoga, Panchangam, Vimshottari Dasha, Ashtaka Varga, Shadabala and Bhavabala【773089329838424†L204-L218】. Buttons to edit, save, open or create a new kundali are also provided【773089329838424†L220-L228】. Two divisional chart options (Lagna D1 and Lagna D9) appear near the chart area【773089329838424†L230-L233】.
+1.2 Divisional Charts (Vargas)
+Below the chart area the site lists the available divisional charts. In addition to the basic Bhav Chalit (house equalisation) and Rashi charts, it includes divisional charts for Hora (D2), Drekkana (D3), Chaturthamsha (D4), Panchamsha (D5), Shasthamsha (D6), Saptamsha (D7), Ashtamsha (D8), Navamsha (D9), Dashamsha (D10), Ekadashamsha (D11), Dvadashamsha (D12), Shodashamsha (D16), Vimshamsha (D20), Chaturvimshamsha (D24), Saptavimshamsha (D27), Trimshamsha (D30), Chatvarimshamsha (D40), Akshavedamsha (D45) and Shashtamsha (D60). These are enumerated in the page text【773089329838424†L240-L244】. The programme must therefore support calculation and display of the D‑series charts up to D60.
+1.3 Graha (Planet) Details
+The Graha tab provides detailed information for each planet. Columns listed include the planet name, its longitude in degrees/minutes/seconds, the nakshatra and pad (quarter) it occupies, the nakshatra lord and sub‑lord, the bhava (house) in which it resides, the house it rules, the relationship (e.g., friend, enemy, neutral) and dignity (e.g., exalted, debilitated)【773089329838424†L287-L336】. Additionally, more precise positional data such as right ascension, declination (krānti), raw longitude and motion speed are displayed【773089329838424†L618-L640】. The software must compute these values using accurate astronomical algorithms and present them in a user‑friendly table.
+1.4 Bhava (House) Details
+The Bhava section of the Rashi chart lists each house (1 – 12), its residents (planets occupying the house), the owner (planet ruling the sign on the cusp), the rashi (zodiac sign), the house’s qualities (e.g., movable/fixed/common and masculine/feminine), and the planets that aspect the house【773089329838424†L482-L602】. Displaying this information helps interpret how planets distribute their influence across the twelve houses.
+1.5 Additional Utilities
+Other tabs supply advanced calculations:
+•	Upagraha: positions of secondary planets such as Gulika, Yamaghantaka and other special points.
+•	Yoga: detection of hundreds of yogas (planetary combinations) based on classical texts.
+•	Panchangam: traditional almanac data (tithi, nakshatra, yoga, karana, weekday, sunrise/sunset).
+
+•	Vimshottari Dasha: Mahadasha and antardasha periods based on the Moon’s nakshatra.
+
+•	Ashtaka Varga: eight‑fold benefic scoring system for each planet.
+These modules are not described in detail on the DrikPanchang page but will need to be reproduced using authoritative astrological algorithms.
+1.6 Shadabala and Bhavabala
+Two of the most important tabs are Shadabala and Bhavabala. Shadabala is a composite measure of planetary strength derived from six distinct components. Bhavabala refers to the strength of the twelve houses. The DrikPanchang site does not expose the calculation steps but the overall presentation suggests the final strength values and their components are displayed. The software must calculate both metrics accurately.
+2 Shadbala – Six‑fold Planetary Strength
+Vedic astrology evaluates the strength of planets through the Shadbala system. The components of Shadbala are summarised below, with formulas taken from the Saravali documentation and other classical descriptions. Strength values are usually expressed in virupas (minutes of arc where 60 virupas = 1 rūpa). When summing strengths, the final shadbala is often normalised to a standard value (e.g., 360 virupas). The programme should compute each component and report both the individual and total strengths.
+2.1 Sthana Bala – Positional Strength
+Sthana Bala consists of five sub‑components based on a planet’s zodiacal placement【968575275486179†L55-L64】:
+1.	Uchcha Bala (Exaltation strength): Calculated from the distance between a planet’s position and its debilitation point. The strength in virupas is one third of that distance【968575275486179†L65-L79】. Maximum strength (60 virupas) occurs at the exact exaltation point and zero at deep debilitation.
+2.	Saptavargaja Bala (Divisional strength): Based on the planet’s placement in seven divisional charts: Rashi (D1), Hora (D2), Drekkana (D3), Saptamsha (D7), Navamsha (D9), Dvadashamsha (D12) and Trimshamsha (D30)【968575275486179†L81-L97】. Depending on whether the planet falls in its moolatrikona, own sign, friend’s sign, enemy sign etc., it receives 45, 30, 20, 15, 10, 4 or 2 virupas respectively【968575275486179†L101-L110】.
+3.	Oja‑Yugma Rashi‑Amsha Bala: Rewards planets for being placed in odd/even signs and navamsas appropriate to their gender. Male and neutral planets get 15 virupas if in odd rasi/navamsa; female planets get 15 virupas if in even signs/navamsas【968575275486179†L125-L136】. Maximum is 30 virupas.
+4.	Kendradi Bala: Planets in angle (Kendra) houses receive 60 virupas; in succedent houses (panaphara) 30 virupas; in cadent houses (apoklima) 15 virupas【968575275486179†L150-L160】. This emphasises planets located in the 1st, 4th, 7th or 10th houses.
+5.	Drekkana Bala: Based on the decanate (0–10°, 10–20°, 20–30°) within a sign. Male planets get 15 virupas in the first decanate, female planets in the second and neutral planets in the third【968575275486179†L166-L178】.
+2.2 Dig Bala – Directional Strength
+Dig Bala measures how close a planet is to its optimal directional angle (east, west, north or south). According to the Saravali documentation, each planet is strong in a particular quadrant: Sun/Mars are strong at the midheaven (10th house), Jupiter/Mercury at the ascendant (1st house), Moon/Venus at the nadir (4th house), and Saturn at the descendant (7th house)【631432258379929†L64-L94】. The dig bala of a planet is calculated from the angular distance between its actual position and the point of minimum strength, scaled so that a maximum of 60 virupas is obtained when the planet is exactly at its strongest point【631432258379929†L75-L85】.
+2.3 Kala Bala – Temporal Strength
+Kala Bala evaluates strength based on diurnal/nocturnal preferences and time divisions. It consists of six parts【38624106656441†L45-L59】:
+1.	Nathonatha Bala: Diurnal/nocturnal strength – Moon, Mars and Saturn are stronger at night; Sun, Jupiter and Venus in the day; Mercury is neutral【38624106656441†L64-L69】.
+2.	Paksha Bala: Depends on the Moon’s phase; benefics gain strength during the bright half and malefics during the dark half. The formula is (Moon longitude − Sun longitude)/3 in virupas, adjusted to remain between 0 and 60【38624106656441†L79-L87】.
+3.	Tribhaga Bala: Divides day and night into three parts; the planet ruling the part of birth gets 60 virupas while Jupiter always receives 60 virupas【38624106656441†L103-L118】.
+4.	Varsha‑Masa‑Dina‑Hora Bala: Strength from the lord of the year (15 virupas), month (30 virupas), day (45 virupas) and hour (60 virupas)【38624106656441†L120-L134】.
+5.	Yudhdha Bala: Adjusts strength when two planets are in a planetary war (within one degree). The difference in accumulated Kala Bala is added to the victor and deducted from the vanquished【38624106656441†L135-L142】.
+6.	Ayana Bala: Often treated as a separate component; described below.
+2.4 Ayana Bala – Equinoctial Strength
+Ayana Bala depends on the declination (kranti) of the planet relative to the celestial equator. Moon and Saturn are strongest when south of the equator; Sun, Mars, Jupiter and Venus when north【561793931386147†L55-L60】. A planet has medium strength at the equinoxes (0° Aries or Libra) and maximum strength near 0° Cancer or 0° Capricorn【561793931386147†L72-L83】. The formula given by the Saravali site is:
+ayanabala = 30 × (ε ± kranti)/ε = 1.2793 × (ε ± kranti)
+where ε is the obliquity of the ecliptic (≈23°27′) and the sign of kranti depends on the planet (add for Moon/Saturn with southern declination and Sun/Mars/Jupiter/Venus with northern declination; always add for Mercury)【561793931386147†L67-L102】. Parasara’s method uses a length‑based approach dividing the distance from the equinox into three khandas and mapping the result to 0–90, then scaling it by 1/3 to obtain virupas【561793931386147†L109-L149】.
+2.5 Cheshta Bala – Motional Strength
+Cheshta Bala considers whether a planet is retrograde, stationary, slow, average, fast or accelerating. Retrograde planets (Vakra) receive the full 60 virupas, while different direct motions yield lesser values. Stationary planets (Vikala) receive 15 virupas; slow planets (Mandatara) 15; medium speed (Manda) 30; average speed (Sama) 7.5 (the weakest); fast motion (Chara) 45; and accelerated motion entering the next sign (Atichara) 30【661016500664713†L45-L107】. The Sun’s cheshta bala is identical to its ayana bala and the Moon’s to its paksha bala【661016500664713†L49-L51】.
+2.6 Naisargika Bala – Natural Strength
+Naisargika Bala assigns fixed strength based on a planet’s inherent luminosity【772801545330431†L47-L60】. The usual order and strengths are: Sun 60 virupas, Moon 51.4, Venus 42.9, Jupiter 34.3, Mercury 25.7, Mars 17.1 and Saturn 8.6【772801545330431†L62-L69】. Rahu and Ketu are sometimes given the same as Saturn.
+2.7 Drig Bala – Aspectual Strength
+Drig Bala quantifies the benefic or malefic aspects received by a planet. Although the Saravali documentation does not provide a detailed formula for Drig Bala, classical texts state that benefic aspects (from Jupiter, Venus, Mercury and the waxing Moon) contribute positively and malefic aspects (from Saturn, Mars, Sun and waning Moon) reduce the score. Implementations typically assign virupas based on the number and nature of aspects.
+2.8 Total Shadbala
+The total Shadbala for a planet is the sum of its Sthana, Dig, Kala, Cheshta, Naisargika and Drig balas. Many astrologers normalise the total (e.g., dividing by 60) to express strength in rupas or to compare planets. The software should compute each component, display them in a table and provide the total for comparison with standard thresholds.
+3 Bhavabala – House Strength
+Bhavabala measures the strength of the twelve houses and therefore indicates how robustly each area of life manifests. Classical sources describe several factors contributing to Bhavabala:
+1.	Strength of the house lord: The shadbala (especially sthana and dig bala) of the planet ruling a house directly contributes to that house’s strength.
+2.	Occupancy: Benefic planets occupying a house increase its strength, while malefics decrease it. Multiple planets amplify the effect. The DrikPanchang page lists the planets residing in each house【773089329838424†L482-L602】.
+3.	Aspectual support: Benefic aspects onto a house increase its strength; malefic aspects reduce it. The page explicitly notes the “aspected by” field【773089329838424†L482-L602】.
+4.	Sign quality: Houses in movable/fixed/common signs and masculine/feminine signs may acquire different weights. The qualities column on the DrikPanchang site indicates these attributes【773089329838424†L482-L602】.
+5.	Kendra/Trikona: Houses that are angular (1,4,7,10) or trinal (5,9) inherently possess more strength. This corresponds to the Kendradi classification used in Sthana Bala and should be factored into Bhavabala.
+Bhavabala calculation is not as well codified as Shadbala; different schools use slightly different weighting systems. A common approach is to compute a base score from the lord’s strength, adjust for occupancy and aspects, and then normalise the final values. The programme must implement a flexible Bhavabala calculation that considers these components and produces results comparable to DrikPanchang.
+4 Software Requirements and Implementation Plan
+4.1 Technology Stack
+•	Programming Language: Python 3.
+•	Ephemeris Library: Use the Swiss Ephemeris (available via the pyswisseph or swisseph Python package) to compute accurate longitudes, right ascension, declination and speed for the Sun, Moon, planets and upagrahas. Swiss Ephemeris supports various ayanamsa values and provides high precision.
+•	House System: Support the Placidus, Whole‑sign and Equal House systems. The default may follow DrikPanchang (likely whole‑sign or Bhav Chalit). pyswisseph can compute house cusps using the swe_houses function.
+•	Divisional Charts: Write functions to derive Vargas (D1…D60) by dividing signs into equal parts. Each divisional chart has specific rules for assigning signs to divisions. Use modular functions so that new divisional charts can be added easily.
+•	GUI Framework: Implement the interface using PyQt5 or PySide6. PyQt provides a professional look and supports complex widgets such as tabs, tables and custom drawing canvases. Alternatively, Kivy could be used for a modern cross‑platform interface but may require more custom code for chart drawing.
+•	Graphical Rendering: Use Matplotlib or PyQt’s QPainter for rendering north/south charts and divisional diagrams. Each chart should show houses, sign names and planet symbols, replicating the DrikPanchang layout.
+•	Persistence: Allow users to save kundali data to files (e.g., JSON or SQLite) and open them later. Provide export to PDF or image formats for charts and reports.
+4.2 Data Input and User Interface
+1.	Birth Data Entry: Provide fields for date, time and birthplace. Include a time‑zone database and location search (e.g., via the pytz and timezonefinder packages). The time zone should automatically adjust for daylight savings. Latitude and longitude must be obtained for house calculations.
+2.	Tabs/Modules: Recreate the tab structure seen on DrikPanchang: Chart, Graha, Upagraha, Yoga, Panchangam, Vimshottari Dasha, Ashtaka Varga, Shadbala, Bhavabala and other divisional charts. Each tab should hold a widget (table or chart) that displays its respective data.
+3.	Chart Viewer: For the Chart tab, display the natal chart using north‑Indian or south‑Indian style (allow user selection). Provide controls to switch between Bhava Chalit and various D‑charts.
+4.	Graha and Bhava Tables: Use QTableWidget or QTableView to show planetary and house details as described above【773089329838424†L287-L336】【773089329838424†L482-L602】. Columns should include longitudes, nakshatras, house occupancy, rulers, dignities, aspects and motion speed.
+5.	Interactive Elements: Allow users to click on a planet or house to open a detailed dialog showing its shadbala components, aspects, divisional placements and interpretations.
+6.	Settings: Provide options for ayanamsa selection (Lahiri, Raman, Krishnamurti etc.), house system, display language and theme (light/dark).
+4.3 Computations
+1.	Ephemeris Calculations: Using Swiss Ephemeris, compute the sidereal longitudes (applying chosen ayanamsa), latitudes, right ascension, declination and speed of each planet at the given time. Compute upagrahas and special points such as Gulika, Mandi, Yamaghantaka using time proportional formulas.
+2.	House Cusps: Compute the house cusps for the chosen system. For Bhav Chalit, adjust the cusps so that the ascending point becomes the start of the 1st house.
+3.	Divisional Charts: Implement algorithms to derive each Varga. For example, in the Navamsha (D9) chart each sign (30°) is divided into nine parts of 3°20′ each. The sign for a planet in the Navamsha chart is determined by counting navamshas from Aries for odd signs and from Libra for even signs. Document similar rules for other divisions.
+4.	Nakshatras and Padas: Divide the zodiac into 27 nakshatras of 13°20′ each. Determine the nakshatra, pada (quarter) and nakshatra lord for each planet.
+5.	Aspects: Compute rasi aspects (full, 75 %, 50 %, 25 %) and planetary aspects according to classical drishti rules. Distinguish between benefic and malefic aspects for Shadbal and Bhavabala.
+6.	Shadbala: Implement the formulas summarised in Section 2 to compute Sthana, Dig, Kala, Ayana, Cheshta, Naisargika and Drig balas. Normalise and sum to obtain total Shadbala. Display individual components and totals in a table.
+7.	Bhavabala: Compute the strength of each house by combining the Shadbala of the house lord, occupancy factors (benefic vs malefic), aspectual influences, sign qualities and kendra/trikona emphasis. Provide both numerical scores and qualitative descriptions (e.g., “very strong”, “moderate”, “weak”).
+8.	Yogas: Identify common yogas based on planetary placements (e.g., Raj Yogas, Dhana Yogas, Doshas). Maintain a database of yoga definitions and iterate through charts to detect matches.
+9.	Vimshottari Dasha: Calculate dasha periods based on the Moon’s nakshatra and place them in a hierarchical structure (mahadasha → antardasha → pratyantardasha). Provide a timeline view and the ability to navigate to a dasha period and see the chart at that time.
+10.	Ashtakavarga: Compute bindus for each planet in each house and summarise the benefic scores. Display the Bhinnashtakavarga (planet’s individual scores) and Sarvashtakavarga (combined scores by house).
+11.	Panchangam: Calculate tithi, yoga, karana, nakshatra and weekday for the birth time using lunar and solar longitudes. Display sunrise, sunset, moonrise, moonset and other almanac data.
+4.4 AI‑Driven Prediction Engine
+The user requested an AI feature capable of recommending auspicious times for specific activities (business, marriage, travel, exams, etc.) based on astrological principles. This engine must use the calculated Shadbala, Bhavabala, Varga placements, Ishta‑Kashta pala (benefic/malefic strength) and other factors.
+High‑level design:
+1.	Training data / rules: The system can use a hybrid rule‑based and machine‑learning approach. For rule‑based logic, codify traditional principles: for example, business success relies on strong Mercury and Jupiter (communication and wisdom), favourable 2nd and 11th houses (wealth), a strong 10th house (career) and auspicious dashas. Marriage might emphasise Venus, Moon and the 7th house. Travel could favour the 3rd and 9th houses and the lord of the 9th.
+2.	Feature extraction: For a given time period or date range, compute planetary strengths (Shadbala), house strengths (Bhavabala), yogas and dasha influences. Normalise them to create a feature vector.
+3.	Prediction algorithm: Implement a scoring function that weights the features according to the selected activity. For example, a business score could be a weighted sum of Mercury shadbala, Jupiter shadbala, 2nd‑house Bhavabala, 11th‑house Bhavabala and Ashtakavarga scores for the 2nd and 11th houses. Negative weights could be assigned to malefic influences (e.g., weak 10th house or Saturn afflicting Mercury). Machine‑learning models (e.g., decision trees or gradient boosting) may be trained on historical data labelled with successful event times if such data becomes available.
+4.	User interface: Provide a drop‑down menu to select the desired activity. Allow the user to specify a date range and optional constraints (e.g., working hours). The engine evaluates each day (or time slot) within the range, computes the activity score and displays a ranked list of auspicious times. Results can be visualised as a calendar heat map or list.
+5.	Interpretability: Present not only the recommended time but also a breakdown of the factors contributing to the score (e.g., “Mercury strength is high, 2nd house strong, favourable dasha”). This increases user trust in the AI predictions.
+4.5 GUI and User Experience
+The programme should provide a polished, intuitive interface:
+•	A main window with a navigation bar or tab bar mirroring the DrikPanchang layout. Each tab contains a scrollable area for tables or charts.
+•	Resizable charts: Users should be able to zoom, save or print charts. Colour schemes must clearly differentiate houses and planets.
+•	Context menus: Right‑clicking on a planet or house brings up options like “Show details”, “Show Shadbala breakdown” or “Open D9 chart”.
+•	Settings dialog: Users can choose the ayanamsa, house system, preferred language, time format, and theme (modern/classic). Provide tooltips explaining each option.
+•	Saving and loading: The file menu should include options to save kundalis (in JSON or a proprietary format) and load them later. Export to PDF for printing.
+•	Help and documentation: Integrate a help system explaining astrological concepts, calculation methods and how to interpret results.
+4.6 Architecture and Modules
+The software should follow a modular architecture for maintainability and extensibility:
+•	GUI Layer: PyQt windows, tabs, dialogs and charts. This layer handles user interaction and delegates computation to backend modules.
+•	Ephemeris Module: A wrapper around Swiss Ephemeris functions, providing high‑level methods to compute planetary positions, house cusps and sidereal corrections.
+•	Varga Module: Functions to construct divisional charts based on planetary positions and the chosen division scheme.
+•	Strength Module: Implements Shadbala and Bhavabala calculations, referencing formulas from Section 2 and Section 3. This module should be unit‑tested to ensure accuracy. Include methods to compute Ishta‑Kashta pala (benefic vs malefic strength) and Ashtakavarga scores.
+•	Yoga Module: Database of yogas and algorithms to detect them.
+•	Dasha Module: Calculation and formatting of Vimshottari (and optionally other) dashas.
+•	Panchang Module: Computes tithi, nakshatra, yoga, karana, sunrise, sunset and other almanac data.
+•	AI Module: Implements the prediction engine described above. It interfaces with the strength module to obtain features, performs scoring or machine learning, and returns ranked time recommendations.
+•	Persistence Module: Handles saving/loading kundali data to/from disk and exporting reports.
+4.7 Testing and Validation
+1.	Cross‑check with DrikPanchang: Use the site as a benchmark by generating charts for known dates and locations. Compare planetary longitudes, divisional placements, shadbala scores and bhavabala values. Investigate discrepancies and adjust algorithms accordingly.
+2.	Unit tests: For each module, write tests that verify formulas (e.g., Uchcha Bala formula returns 39.3 virupas for a planet 118° from its debilitation point【968575275486179†L65-L79】). Use known example charts from classical texts.
+3.	User feedback: Provide beta versions to experienced astrologers to test the interface and calculations. Incorporate feedback before final release.
+5 OpenAI Codex Prompt for Implementing the Software
+The following prompt is intended for OpenAI Codex (or a similar code‑generation model). It instructs the model to create the full Python programme described above. The prompt is deliberately detailed to ensure that the generated code covers all required features and follows best practices.
+You are an expert Python developer with strong knowledge of Vedic astrology, the Swiss Ephemeris and GUI programming using PyQt5.  Your task is to build a professional astrology application that replicates the features of DrikPanchang’s Kundali page and adds an AI‑assisted time‑selection tool.  Follow these requirements:
+
+1. **Project structure:** Organise the code into modules (`gui.py`, `ephemeris.py`, `varga.py`, `strength.py`, `yoga.py`, `dasha.py`, `panchang.py`, `ai.py`, `storage.py`, and a main launcher).  Use object‑oriented design where appropriate.  Include docstrings and comments.
+
+2. **Libraries:** Use Python 3, PyQt5 or PySide6 for the GUI, and the `swisseph` package for astronomical calculations.  Also use `numpy` for vectorised math, `pandas` for tabular data, and `matplotlib` for chart drawing.  Use `pytz` and `timezonefinder` to handle time zones.
+
+3. **GUI:** Create a main window with a tab bar.  Tabs should include Chart, Graha, Upagraha, Yoga, Panchangam, Vimshottari Dasha, Ashtaka Varga, Shadbala, Bhavabala and AI Prediction.  Each tab is a QWidget subclass.  Provide forms for entering birth date, time and location (with timezone lookup).  Include a settings dialog to choose ayanamsa (e.g., Lahiri), house system and chart style.
+
+4. **Chart rendering:** Implement functions to draw north‑Indian and south‑Indian style charts.  Each chart should show the twelve houses with sign names and planet symbols.  Provide the ability to switch between Bhava Chalit and divisional charts (D1–D60).  Use `matplotlib` in a PyQt canvas or PyQt’s native drawing methods.  Provide zooming and export to image/PDF.
+
+5. **Ephemeris module:** Wrap the Swiss Ephemeris functions (`swe_calc_ut`, `swe_houses`, etc.) to compute sidereal longitudes, latitudes, right ascension, declination and speed for the Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu and Ketu, as well as upagrahas (Gulika, Mandi).  Support multiple ayanamsa options.  Return results in degrees and virupas where appropriate.
+
+6. **Divisional charts:** Implement algorithms to derive the main varga charts.  For each division (D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D16, D20, D24, D27, D30, D40, D45, D60) write a function that takes a planet’s longitude and returns the sign placement in that varga.  Document the mathematical rules (e.g., Navamsha: each 30° sign is divided into nine parts of 3°20′; count the navamsha from Aries if the sign is odd, from Libra if even).  Provide tests.
+
+7. **Strength calculations:** Implement the Shadbala system using formulas from authoritative sources.  Compute Sthana Bala (including Uchcha Bala, Saptavargaja Bala, Oja‑Yugma Bala, Kendradi Bala, Drekkana Bala)【968575275486179†L55-L64】【968575275486179†L65-L79】【968575275486179†L81-L100】, Dig Bala【631432258379929†L64-L94】【631432258379929†L75-L85】, Kala Bala with its sub‑components【38624106656441†L45-L59】【38624106656441†L79-L87】【38624106656441†L103-L118】【38624106656441†L120-L134】【38624106656441†L135-L142】, Ayana Bala【561793931386147†L55-L60】【561793931386147†L72-L83】【561793931386147†L109-L149】, Cheshta Bala【661016500664713†L45-L107】, Naisargika Bala【772801545330431†L47-L69】 and Drig Bala (use classical rules for benefic/malefic aspects).  Sum the components to get total shadbala.
+
+8. **Bhavabala:** Compute the strength of each house based on the strength of its lord (from Shadbala), occupancy (benefic vs malefic planets), aspectual influences and sign qualities as explained in the design document【773089329838424†L482-L602】.  Output the results in a table.
+
+9. **Yogas:** Maintain a collection (e.g., JSON or YAML) of yogas and their conditions.  Write functions to detect yogas in the chart.  Display detected yogas in the Yoga tab with descriptions.
+
+10. **Vimshottari dasha:** Implement the Vimshottari dasha calculation using the Moon’s nakshatra.  Compute Mahadasha, Antardasha and Pratyantardasha start and end dates.  Provide a tree view or table for navigating through dashas.
+
+11. **Ashtakavarga:** Compute individual and cumulative ashtakavarga scores.  Display Bhinnashtakavarga and Sarvashtakavarga charts.
+
+12. **Panchang:** For the given date and location, calculate tithi, nakshatra, yoga, karana, weekday, sunrise, sunset, moonrise and moonset.  Present this information in the Panchangam tab.
+
+13. **AI Prediction module:** Implement a prediction engine that suggests auspicious times for user‑selected activities (business, marriage, travel, exams, etc.).  Define a scoring function that combines Shadbala, Bhavabala, Ishta‑Kashta pala, dasha influences and varga placements.  Allow the user to specify a date range and view a ranked list of recommended times.  Provide a drop‑down menu for activity selection and show an explanation of the scoring factors.
+
+14. **Persistence:** Allow kundali data to be saved to and loaded from JSON files.  Provide options to export charts and tables to PDF or images.
+
+15. **Testing:** Include unit tests for all calculation functions.  Provide sample charts and expected results.  Compare results against DrikPanchang outputs for validation.
+
+Generate the full Python code fulfilling these requirements.  The code must be well‑structured, documented and ready to run.  Do not include any extraneous text or commentary outside of the code.
+Conclusion
+Building a professional Vedic astrology programme that mirrors the functionality of DrikPanchang’s Kundali page is a substantial undertaking. The above plan summarises the observed features, details the complex Shadbala and Bhavabala computations with citations from authoritative sources and outlines a modular software architecture. The accompanying Codex prompt provides detailed instructions to generate the Python code. By following this plan and leveraging accurate astronomical algorithms, it is possible to create a reliable and user‑friendly astrology application with advanced predictive capabilities.
