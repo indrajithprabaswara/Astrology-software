@@ -257,10 +257,14 @@ class MainWindow(QMainWindow):
         dt = datetime.combine(date, time)
         latitude = self.lat_spin.value()
         longitude = self.lon_spin.value()
-        positions = self.ephemeris.planetary_positions(dt)
+        positions = self.ephemeris.planetary_positions(dt, latitude, longitude)
         houses = self.ephemeris.house_cusps(dt, latitude, longitude)
-        vargas = self.varga_calculator.compute({planet: pos.longitude for planet, pos in positions.items()})
-        strength = StrengthCalculator(positions, houses, vargas)
+        varga_details = self.varga_calculator.compute({planet: pos.longitude for planet, pos in positions.items()})
+        varga_summary = {
+            division: {planet: placement.sign for planet, placement in placements.items()}
+            for division, placements in varga_details.items()
+        }
+        strength = StrengthCalculator(positions, houses, varga_summary)
         shadbala_df = strength.shadbala()
         bhavabala_df = strength.bhavabala()
         graha_df = positions_dataframe(positions)
@@ -280,6 +284,10 @@ class MainWindow(QMainWindow):
         self.bhavabala_tab.update_data(bhavabala_df)
         self.ashtaka_tab.update_data(pd.DataFrame())
         self.ai_tab.set_location(latitude, longitude)
+        divisional_frames = {
+            name: pd.DataFrame([placement.as_dict() for placement in placements.values()]).set_index("Planet")
+            for name, placements in varga_details.items()
+        }
         self.current_record = KundaliRecord(
             metadata={
                 "name": self.name_edit.text(),
@@ -288,7 +296,7 @@ class MainWindow(QMainWindow):
                 "longitude": longitude,
             },
             planetary_positions=graha_df,
-            divisional_positions={name: pd.DataFrame.from_dict(data, orient="index", columns=["Sign"]) for name, data in vargas.items()},
+            divisional_positions=divisional_frames,
             strengths={"shadbala": shadbala_df.to_dict(orient="records"), "bhavabala": bhavabala_df.to_dict(orient="records")},
         )
 

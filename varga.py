@@ -20,6 +20,21 @@ ZODIAC_SIGNS = [
     "Pisces",
 ]
 
+SIGN_RULERS = {
+    "Aries": "Mars",
+    "Taurus": "Venus",
+    "Gemini": "Mercury",
+    "Cancer": "Moon",
+    "Leo": "Sun",
+    "Virgo": "Mercury",
+    "Libra": "Venus",
+    "Scorpio": "Mars",
+    "Sagittarius": "Jupiter",
+    "Capricorn": "Saturn",
+    "Aquarius": "Saturn",
+    "Pisces": "Jupiter",
+}
+
 
 def _sign_index(longitude: float) -> int:
     return int((longitude % 360) // 30)
@@ -100,16 +115,27 @@ def get_varga(name: str) -> Callable[[float], str]:
 
 
 @dataclass
-class VargaResult:
+class DivisionalPlacement:
     """Container for divisional chart placement."""
 
     planet: str
-    longitude: float
-    varga_sign: str
+    sign: str
+    degree: float
+    ruler: str
+    division: str
+
+    def as_dict(self) -> Dict[str, float | str]:
+        return {
+            "Planet": self.planet,
+            "Sign": self.sign,
+            "Degree": round(self.degree, 4),
+            "Ruler": self.ruler,
+            "Division": self.division,
+        }
 
 
 class VargaCalculator:
-    """Compute varga placements for planets."""
+    """Compute varga placements for planets with degree level detail."""
 
     def __init__(self, divisions: Tuple[str, ...] | None = None) -> None:
         self.divisions = divisions or (
@@ -135,11 +161,46 @@ class VargaCalculator:
             "D60",
         )
 
-    def compute(self, planetary_longitudes: Dict[str, float]) -> Dict[str, Dict[str, str]]:
-        """Return mapping of division -> planet -> sign."""
+    def compute(self, planetary_longitudes: Dict[str, float]) -> Dict[str, Dict[str, DivisionalPlacement]]:
+        """Return mapping of division -> planet -> placement details."""
 
-        results: Dict[str, Dict[str, str]] = {}
+        results: Dict[str, Dict[str, DivisionalPlacement]] = {}
         for division in self.divisions:
             func = get_varga(division)
-            results[division] = {planet: func(lon) for planet, lon in planetary_longitudes.items()}
+            division_number = self._division_number(division)
+            division_results: Dict[str, DivisionalPlacement] = {}
+            for planet, lon in planetary_longitudes.items():
+                sign = func(lon)
+                degree = self._degree_in_varga(lon, division_number)
+                placement = DivisionalPlacement(
+                    planet=planet,
+                    sign=sign,
+                    degree=degree,
+                    ruler=SIGN_RULERS.get(sign, ""),
+                    division=division,
+                )
+                division_results[planet] = placement
+            results[division] = division_results
         return results
+
+    def compute_summary(self, planetary_longitudes: Dict[str, float]) -> Dict[str, Dict[str, str]]:
+        """Compatibility helper returning only the sign names (legacy API)."""
+
+        detailed = self.compute(planetary_longitudes)
+        return {
+            division: {planet: placement.sign for planet, placement in placements.items()}
+            for division, placements in detailed.items()
+        }
+
+    @staticmethod
+    def _division_number(name: str) -> int:
+        try:
+            return int(name[1:])
+        except ValueError as exc:
+            raise ValueError(f"Invalid varga identifier: {name}") from exc
+
+    @staticmethod
+    def _degree_in_varga(longitude: float, division_number: int) -> float:
+        span = 30.0 / division_number
+        fractional = (longitude % span) / span
+        return fractional * 30.0
