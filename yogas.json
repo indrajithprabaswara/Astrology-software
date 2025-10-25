@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Gajakesari Yoga",
+    "description": "Moon in kendra from Jupiter.",
+    "conditions": {"Moon": "kendra_from_Jupiter"}
+  },
+  {
+    "name": "Chandra-Mangal",
+    "description": "Moon and Mars in the same house.",
+    "conditions": {"Moon": "conjunction_Mars"}
+  }
+]
