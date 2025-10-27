@@ -6,7 +6,10 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import List
 
-import pandas as pd
+try:  # pandas optional dependency.
+    import pandas as pd
+except ImportError:  # pragma: no cover - executed when pandas is missing.
+    pd = None  # type: ignore[assignment]
 
 NAKSHATRA_DEGREES = 13 + 20 / 60
 
@@ -86,6 +89,9 @@ def _sub_dashas(parent_period: DashaPeriod, levels: int) -> List[DashaPeriod]:
 
 
 def periods_to_dataframe(periods: List[DashaPeriod]) -> pd.DataFrame:
+    if pd is None:  # pragma: no cover - simple guard
+        raise RuntimeError("pandas is required to convert dasha periods to a DataFrame")
+
     return pd.DataFrame(
         [
             {
