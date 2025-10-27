@@ -4,9 +4,43 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Iterable, List
 
-import pandas as pd
+try:  # pandas optional dependency; calculations work without it.
+    import pandas as pd
+except ImportError:  # pragma: no cover - executed when pandas is missing.
+    pd = None  # type: ignore[assignment]
+
+
+class _SimpleSeries(list):
+    """Very small helper mimicking pandas.Series features used in tests."""
+
+    def __init__(self, values: Iterable[float | int | str]) -> None:
+        super().__init__(values)
+
+    def mean(self) -> float:
+        if not self:
+            return 0.0
+        return float(sum(self) / len(self))
+
+
+class _SimpleDataFrame:
+    """Minimal stand-in for pandas.DataFrame used when pandas is unavailable."""
+
+    def __init__(self, rows: List[Dict[str, float | str]]) -> None:
+        self._rows = rows
+        self.columns = list(rows[0].keys()) if rows else []
+
+    @property
+    def empty(self) -> bool:
+        return not self._rows
+
+    def __len__(self) -> int:
+        return len(self._rows)
+
+    def __getitem__(self, key: str) -> _SimpleSeries:
+        return _SimpleSeries(row[key] for row in self._rows if key in row)
+
 
 from ephemeris import PlanetPosition
 from varga import ZODIAC_SIGNS
@@ -132,8 +166,8 @@ class StrengthCalculator:
     # ------------------------------------------------------------------
     # Shadbala
 
-    def shadbala(self) -> pd.DataFrame:
-        rows = []
+    def _shadbala_rows(self) -> List[Dict[str, float | str]]:
+        rows: List[Dict[str, float | str]] = []
         for planet, position in self.positions.items():
             if planet not in PLANET_GENDERS:
                 continue
@@ -158,6 +192,12 @@ class StrengthCalculator:
                     "Total": total,
                 }
             )
+        return rows
+
+    def shadbala(self):  # type: ignore[override]
+        rows = self._shadbala_rows()
+        if pd is None:
+            return _SimpleDataFrame(rows)
         return pd.DataFrame(rows)
 
     def _sthana_bala(self, planet: str, position: PlanetPosition) -> float:
@@ -344,17 +384,19 @@ class StrengthCalculator:
     # ------------------------------------------------------------------
     # Bhavabala
 
-    def bhavabala(self) -> pd.DataFrame:
-        shadbala_df = self.shadbala().set_index("Planet")
-        rows = []
+    def bhavabala(self):  # type: ignore[override]
+        shadbala_lookup = {row["Planet"]: row for row in self._shadbala_rows()}
+        rows: List[Dict[str, float | str]] = []
         for house in range(1, 13):
-            strength = self._house_strength(house, shadbala_df)
+            strength = self._house_strength(house, shadbala_lookup)
             rows.append({"House": house, "Strength": strength})
+        if pd is None:
+            return _SimpleDataFrame(rows)
         return pd.DataFrame(rows)
 
-    def _house_strength(self, house: int, shadbala_df: pd.DataFrame) -> float:
+    def _house_strength(self, house: int, shadbala_lookup: Dict[str, Dict[str, float | str]]) -> float:
         lord = self._house_lord(house)
-        lord_strength = shadbala_df.get("Total", pd.Series()).get(lord, 120.0)
+        lord_strength = float(shadbala_lookup.get(lord, {}).get("Total", 120.0))
         occupants = [planet for planet, pos in self.positions.items() if self._house_for_longitude(pos.longitude) == house]
         benefics = {"Jupiter", "Venus", "Mercury", "Moon"}
         malefics = {"Saturn", "Mars", "Sun", "Rahu", "Ketu"}
@@ -378,8 +420,8 @@ class StrengthCalculator:
     # ------------------------------------------------------------------
     # Ishta/Kashta Bala
 
-    def compute_ishta_kashta(self) -> pd.DataFrame:
-        results = []
+    def compute_ishta_kashta(self):  # type: ignore[override]
+        results: List[Dict[str, float | str]] = []
         for planet, position in self.positions.items():
             if planet not in PLANET_GENDERS:
                 continue
@@ -408,4 +450,6 @@ class StrengthCalculator:
                 "Ratio": round(ratio, 3),
             })
 
+        if pd is None:
+            return _SimpleDataFrame(results)
         return pd.DataFrame(results)

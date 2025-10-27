@@ -1,12 +1,27 @@
-"""Swiss Ephemeris wrapper utilities."""
+"""Swiss Ephemeris wrapper utilities.
+
+This module now defaults to *strict* Swiss Ephemeris usage.  Lightweight
+approximations that were previously used as transparent fallbacks are only
+available when explicitly enabled via :class:`EphemerisCalculator`'s
+``allow_approximations`` flag or the
+``ASTROLOGY_SOFTWARE_ALLOW_APPROX`` environment variable.  The goal is to make
+any inadvertent use of the imprecise helpers surface immediately in production
+environments while still keeping them reachable for local development and
+tests.
+"""
 
 from __future__ import annotations
 
 import math
+import os
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Tuple
-import pandas as pd
+
+try:  # Optional dependency used for convenience in dataframe helpers.
+    import pandas as pd
+except ImportError:  # pragma: no cover - executed when pandas is missing.
+    pd = None  # type: ignore[assignment]
 
 try:
     import swisseph as swe
@@ -125,11 +140,34 @@ class DailyPeriod:
 
 
 class EphemerisCalculator:
-    """High-level Swiss Ephemeris wrapper."""
+    """High-level Swiss Ephemeris wrapper.
 
-    def __init__(self, ayanamsa: str = "lahiri") -> None:
+    Parameters
+    ----------
+    ayanamsa:
+        Identifier for the sidereal correction to use.
+    allow_approximations:
+        When ``True`` the calculator may fall back to the bundled
+        approximation helpers in situations where Swiss Ephemeris is not
+        available.  When ``False`` (the default) the calculator raises a
+        :class:`RuntimeError` instead of returning potentially inaccurate
+        results.  The flag can also be toggled globally by setting the
+        ``ASTROLOGY_SOFTWARE_ALLOW_APPROX`` environment variable to a truthy
+        value, making it convenient for unit tests and sandbox environments.
+    """
+
+    def __init__(self, ayanamsa: str = "lahiri", *, allow_approximations: bool | None = None) -> None:
         self.ayanamsa = ayanamsa
         self.house_system = "P"
+        if allow_approximations is None:
+            allow_approximations = os.getenv("ASTROLOGY_SOFTWARE_ALLOW_APPROX", "0") not in {"", "0", "false", "False"}
+        self.allow_approximations = allow_approximations
+        if swe is None and not self.allow_approximations:
+            raise RuntimeError(
+                "Swiss Ephemeris is not available. Approximations are disabled; "
+                "set allow_approximations=True or export ASTROLOGY_SOFTWARE_ALLOW_APPROX=1 "
+                "to use non-Swiss fallbacks."
+            )
 
     def set_ayanamsa(self, ayanamsa: str) -> None:
         self.ayanamsa = ayanamsa
@@ -157,6 +195,7 @@ class EphemerisCalculator:
         """Return house cusps using the Swiss Ephemeris if available."""
 
         if swe is None:
+            self._ensure_approximations_allowed("house cusp computation")
             return self._fallback_houses(when, latitude, longitude)
 
         julian_day = self._julian_day(when)
@@ -170,6 +209,7 @@ class EphemerisCalculator:
 
     def _compute_planet(self, planet_id: int, when: datetime) -> PlanetPosition:
         if swe is None:
+            self._ensure_approximations_allowed("planetary positions")
             return self._fallback_planet(planet_id, when)
 
         julian_day = self._julian_day(when)
@@ -195,6 +235,7 @@ class EphemerisCalculator:
         tz_offset_hours = self._infer_timezone_offset(when, tz_offset_hours)
         riseset = self.sunrise_sunset(when, latitude, longitude, tz_offset_hours)
         if riseset is None:
+            self._ensure_approximations_allowed("Gulika/Mandi computation")
             gulika = self._approximate_upagraha_longitude("Gulika", when)
             mandi = self._approximate_upagraha_longitude("Mandi", when)
             return gulika, mandi
@@ -235,6 +276,7 @@ class EphemerisCalculator:
             except Exception:
                 pass
 
+        self._ensure_approximations_allowed("sunrise/sunset computation")
         sunrise = self._approximate_rise_set(date, latitude, longitude, tz_offset_hours, is_sunrise=True)
         sunset = self._approximate_rise_set(date, latitude, longitude, tz_offset_hours, is_sunrise=False)
         if sunrise is None or sunset is None:
@@ -291,6 +333,7 @@ class EphemerisCalculator:
                 pass
 
         # Fallback: use sunrise as baseline and adjust using mean motion.
+        self._ensure_approximations_allowed(f"rise/set for {body}")
         riseset = self.sunrise_sunset(when, latitude, longitude, tz_offset_hours)
         if riseset is None:
             fallback_rise = datetime(date.year, date.month, date.day, 6, 0, tzinfo=local_tz)
@@ -324,6 +367,7 @@ class EphemerisCalculator:
             swe.set_sid_mode(code, 0, 0)
             return swe.get_ayanamsa_ut(julian_day)
         # Fallback: linear precession approximation (~24° for Lahiri circa 2000)
+        self._ensure_approximations_allowed("ayanamsa value computation")
         t = (julian_day - 2451545.0) / 36525.0
         return 24.0 + 0.0001 * t
 
@@ -425,6 +469,7 @@ class EphemerisCalculator:
 
     def ascendant_longitude(self, when: datetime, latitude: float, longitude: float) -> float:
         if swe is None:
+            self._ensure_approximations_allowed("ascendant computation")
             return self._approximate_ascendant(when, latitude, longitude)
         julian_day = self._julian_day(when)
         code = self._resolve_ayanamsa_code(self.ayanamsa)
@@ -438,6 +483,7 @@ class EphemerisCalculator:
             attr = _AYANAMSA_ALIASES.get(key)
             if attr and hasattr(swe, attr):
                 return int(getattr(swe, attr))
+        self._ensure_approximations_allowed("ayanamsa code resolution")
         return _FALLBACK_AYANAMSA_CODES.get(key, _FALLBACK_AYANAMSA_CODES.get("lahiri", 1))
 
     def _infer_timezone_offset(self, when: datetime, tz_offset_hours: float | None) -> float:
@@ -453,6 +499,14 @@ class EphemerisCalculator:
         self, date, latitude: float, longitude: float, tz_offset_hours: float, is_sunrise: bool
     ) -> datetime:
         raise RuntimeError("Swiss ephemeris rise/set not implemented in this environment")
+
+    def _ensure_approximations_allowed(self, context: str) -> None:
+        if not self.allow_approximations:
+            raise RuntimeError(
+                f"Swiss Ephemeris is required for {context}. Approximations are disabled. "
+                "Enable them by initialising EphemerisCalculator with allow_approximations=True "
+                "or setting ASTROLOGY_SOFTWARE_ALLOW_APPROX=1."
+            )
 
     def _approximate_rise_set(
         self, date, latitude: float, longitude: float, tz_offset_hours: float, *, is_sunrise: bool
@@ -490,6 +544,9 @@ class EphemerisCalculator:
 
 def positions_dataframe(positions: Dict[str, PlanetPosition]) -> pd.DataFrame:
     """Convert the planetary position mapping to a dataframe."""
+
+    if pd is None:  # pragma: no cover - simple guard
+        raise RuntimeError("pandas is required to build dataframes from planetary positions")
 
     data = []
     for name, pos in positions.items():

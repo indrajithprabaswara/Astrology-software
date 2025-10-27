@@ -6,7 +6,10 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Optional
 
-import pandas as pd
+try:  # pandas is optional and only required for dataframe exports.
+    import pandas as pd
+except ImportError:  # pragma: no cover - executed when pandas is missing.
+    pd = None  # type: ignore[assignment]
 
 from ephemeris import DailyPeriod, EphemerisCalculator, RiseSetTimes
 
@@ -91,6 +94,9 @@ class PanchangCalculator:
         )
 
     def to_dataframe(self, details: PanchangDetails) -> pd.DataFrame:
+        if pd is None:  # pragma: no cover - simple guard
+            raise RuntimeError("pandas is required to convert Panchang details to a DataFrame")
+
         def fmt(value):
             if isinstance(value, datetime):
                 return value.isoformat()
