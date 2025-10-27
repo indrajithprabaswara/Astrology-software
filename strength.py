@@ -81,6 +81,30 @@ PLANET_HOUSE_OWNERSHIP = {
     "Ketu": [],
 }
 
+MOOLATRIKONA_SIGN = {
+    "Sun": "Leo",
+    "Moon": "Taurus",
+    "Mars": "Aries",
+    "Mercury": "Virgo",
+    "Jupiter": "Sagittarius",
+    "Venus": "Libra",
+    "Saturn": "Aquarius",
+    "Rahu": "Gemini",
+    "Ketu": "Sagittarius",
+}
+
+MOOLATRIKONA_RANGE = {
+    "Sun": (0, 20),
+    "Moon": (3, 30),
+    "Mars": (0, 12),
+    "Mercury": (15, 20),
+    "Jupiter": (0, 10),
+    "Venus": (0, 15),
+    "Saturn": (0, 20),
+    "Rahu": (0, 30),
+    "Ketu": (0, 30),
+}
+
 
 @dataclass
 class ShadbalaBreakdown:
@@ -179,6 +203,22 @@ class StrengthCalculator:
         if ruler in enemies:
             return "enemy"
         return "neutral"
+
+    def _moolatrikona_bala(self, planet: str, position: PlanetPosition) -> float:
+        mt_sign = MOOLATRIKONA_SIGN.get(planet)
+        if mt_sign is None:
+            return 0.0
+
+        sign_idx = int(position.longitude // 30)
+        planet_sign = ZODIAC_SIGNS[sign_idx]
+        if planet_sign != mt_sign:
+            return 0.0
+
+        lon_in_sign = position.longitude % 30
+        start, end = MOOLATRIKONA_RANGE.get(planet, (0, 0))
+        if start <= lon_in_sign <= end:
+            return 45.0
+        return 0.0
 
     def _sign_lord(self, sign_index: int) -> str:
         rulers = [
@@ -334,3 +374,38 @@ class StrengthCalculator:
         cusp = self.houses.get(f"House {house}", 0.0)
         sign = int(cusp // 30)
         return self._sign_lord(sign)
+
+    # ------------------------------------------------------------------
+    # Ishta/Kashta Bala
+
+    def compute_ishta_kashta(self) -> pd.DataFrame:
+        results = []
+        for planet, position in self.positions.items():
+            if planet not in PLANET_GENDERS:
+                continue
+
+            uchcha_bala = self._uchcha_bala(planet, position)
+            mt_bala = self._moolatrikona_bala(planet, position)
+            if mt_bala == 0.0:
+                current_sign = ZODIAC_SIGNS[int(position.longitude // 30)]
+                if self._relationship(planet, current_sign) == "own":
+                    mt_bala = 30.0
+            cheshta_bala = self._cheshta_bala(planet, position)
+            dig_bala = self._dig_bala(planet, position)
+            paksha_bala = 30.0
+
+            ishta = math.sqrt(max(0.01, uchcha_bala) * max(0.01, cheshta_bala))
+            ishta += mt_bala / 2 + dig_bala / 4 + paksha_bala / 2
+            kashta = math.sqrt(max(0.01, 60.0 - uchcha_bala) * max(0.01, 60.0 - cheshta_bala))
+            kashta += max(0.0, 30.0 - mt_bala / 2)
+
+            ratio = ishta / (ishta + kashta) if (ishta + kashta) > 0 else 0.5
+
+            results.append({
+                "Planet": planet,
+                "Ishta": round(ishta, 2),
+                "Kashta": round(kashta, 2),
+                "Ratio": round(ratio, 3),
+            })
+
+        return pd.DataFrame(results)
