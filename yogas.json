@@ -2,11 +2,1422 @@
   {
     "name": "Gajakesari Yoga",
     "description": "Moon in kendra from Jupiter.",
-    "conditions": {"Moon": "kendra_from_Jupiter"}
+    "conditions": {
+      "Moon": "kendra_from_Jupiter"
+    }
   },
   {
     "name": "Chandra-Mangal",
     "description": "Moon and Mars in the same house.",
-    "conditions": {"Moon": "conjunction_Mars"}
+    "conditions": {
+      "Moon": "conjunction_Mars"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H1",
+    "description": "Sun owns house 1 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(1)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H2",
+    "description": "Sun owns house 2 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(2)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H3",
+    "description": "Sun owns house 3 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(3)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H4",
+    "description": "Sun owns house 4 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(4)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H5",
+    "description": "Sun owns house 5 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(5)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H6",
+    "description": "Sun owns house 6 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(6)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H7",
+    "description": "Sun owns house 7 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(7)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H8",
+    "description": "Sun owns house 8 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(8)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H9",
+    "description": "Sun owns house 9 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(9)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H10",
+    "description": "Sun owns house 10 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(10)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H11",
+    "description": "Sun owns house 11 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(11)"
+    }
+  },
+  {
+    "name": "Sun Adhipati Yoga H12",
+    "description": "Sun owns house 12 strengthening that domain.",
+    "conditions": {
+      "Sun": "lord_of_house(12)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H1",
+    "description": "Moon owns house 1 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(1)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H2",
+    "description": "Moon owns house 2 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(2)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H3",
+    "description": "Moon owns house 3 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(3)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H4",
+    "description": "Moon owns house 4 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(4)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H5",
+    "description": "Moon owns house 5 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(5)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H6",
+    "description": "Moon owns house 6 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(6)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H7",
+    "description": "Moon owns house 7 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(7)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H8",
+    "description": "Moon owns house 8 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(8)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H9",
+    "description": "Moon owns house 9 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(9)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H10",
+    "description": "Moon owns house 10 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(10)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H11",
+    "description": "Moon owns house 11 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(11)"
+    }
+  },
+  {
+    "name": "Moon Adhipati Yoga H12",
+    "description": "Moon owns house 12 strengthening that domain.",
+    "conditions": {
+      "Moon": "lord_of_house(12)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H1",
+    "description": "Mars owns house 1 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(1)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H2",
+    "description": "Mars owns house 2 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(2)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H3",
+    "description": "Mars owns house 3 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(3)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H4",
+    "description": "Mars owns house 4 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(4)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H5",
+    "description": "Mars owns house 5 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(5)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H6",
+    "description": "Mars owns house 6 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(6)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H7",
+    "description": "Mars owns house 7 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(7)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H8",
+    "description": "Mars owns house 8 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(8)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H9",
+    "description": "Mars owns house 9 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(9)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H10",
+    "description": "Mars owns house 10 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(10)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H11",
+    "description": "Mars owns house 11 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(11)"
+    }
+  },
+  {
+    "name": "Mars Adhipati Yoga H12",
+    "description": "Mars owns house 12 strengthening that domain.",
+    "conditions": {
+      "Mars": "lord_of_house(12)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H1",
+    "description": "Mercury owns house 1 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(1)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H2",
+    "description": "Mercury owns house 2 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(2)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H3",
+    "description": "Mercury owns house 3 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(3)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H4",
+    "description": "Mercury owns house 4 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(4)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H5",
+    "description": "Mercury owns house 5 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(5)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H6",
+    "description": "Mercury owns house 6 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(6)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H7",
+    "description": "Mercury owns house 7 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(7)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H8",
+    "description": "Mercury owns house 8 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(8)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H9",
+    "description": "Mercury owns house 9 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(9)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H10",
+    "description": "Mercury owns house 10 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(10)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H11",
+    "description": "Mercury owns house 11 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(11)"
+    }
+  },
+  {
+    "name": "Mercury Adhipati Yoga H12",
+    "description": "Mercury owns house 12 strengthening that domain.",
+    "conditions": {
+      "Mercury": "lord_of_house(12)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H1",
+    "description": "Jupiter owns house 1 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(1)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H2",
+    "description": "Jupiter owns house 2 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(2)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H3",
+    "description": "Jupiter owns house 3 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(3)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H4",
+    "description": "Jupiter owns house 4 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(4)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H5",
+    "description": "Jupiter owns house 5 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(5)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H6",
+    "description": "Jupiter owns house 6 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(6)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H7",
+    "description": "Jupiter owns house 7 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(7)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H8",
+    "description": "Jupiter owns house 8 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(8)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H9",
+    "description": "Jupiter owns house 9 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(9)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H10",
+    "description": "Jupiter owns house 10 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(10)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H11",
+    "description": "Jupiter owns house 11 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(11)"
+    }
+  },
+  {
+    "name": "Jupiter Adhipati Yoga H12",
+    "description": "Jupiter owns house 12 strengthening that domain.",
+    "conditions": {
+      "Jupiter": "lord_of_house(12)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H1",
+    "description": "Venus owns house 1 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(1)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H2",
+    "description": "Venus owns house 2 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(2)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H3",
+    "description": "Venus owns house 3 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(3)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H4",
+    "description": "Venus owns house 4 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(4)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H5",
+    "description": "Venus owns house 5 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(5)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H6",
+    "description": "Venus owns house 6 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(6)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H7",
+    "description": "Venus owns house 7 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(7)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H8",
+    "description": "Venus owns house 8 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(8)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H9",
+    "description": "Venus owns house 9 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(9)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H10",
+    "description": "Venus owns house 10 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(10)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H11",
+    "description": "Venus owns house 11 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(11)"
+    }
+  },
+  {
+    "name": "Venus Adhipati Yoga H12",
+    "description": "Venus owns house 12 strengthening that domain.",
+    "conditions": {
+      "Venus": "lord_of_house(12)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H1",
+    "description": "Saturn owns house 1 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(1)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H2",
+    "description": "Saturn owns house 2 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(2)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H3",
+    "description": "Saturn owns house 3 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(3)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H4",
+    "description": "Saturn owns house 4 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(4)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H5",
+    "description": "Saturn owns house 5 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(5)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H6",
+    "description": "Saturn owns house 6 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(6)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H7",
+    "description": "Saturn owns house 7 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(7)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H8",
+    "description": "Saturn owns house 8 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(8)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H9",
+    "description": "Saturn owns house 9 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(9)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H10",
+    "description": "Saturn owns house 10 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(10)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H11",
+    "description": "Saturn owns house 11 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(11)"
+    }
+  },
+  {
+    "name": "Saturn Adhipati Yoga H12",
+    "description": "Saturn owns house 12 strengthening that domain.",
+    "conditions": {
+      "Saturn": "lord_of_house(12)"
+    }
+  },
+  {
+    "name": "Sun-Moon Trikona Yoga",
+    "description": "Sun placed in trine from Moon.",
+    "conditions": {
+      "Sun": "in_trikona_from(Moon)"
+    }
+  },
+  {
+    "name": "Sun-Mars Trikona Yoga",
+    "description": "Sun placed in trine from Mars.",
+    "conditions": {
+      "Sun": "in_trikona_from(Mars)"
+    }
+  },
+  {
+    "name": "Sun-Mercury Trikona Yoga",
+    "description": "Sun placed in trine from Mercury.",
+    "conditions": {
+      "Sun": "in_trikona_from(Mercury)"
+    }
+  },
+  {
+    "name": "Sun-Jupiter Trikona Yoga",
+    "description": "Sun placed in trine from Jupiter.",
+    "conditions": {
+      "Sun": "in_trikona_from(Jupiter)"
+    }
+  },
+  {
+    "name": "Sun-Venus Trikona Yoga",
+    "description": "Sun placed in trine from Venus.",
+    "conditions": {
+      "Sun": "in_trikona_from(Venus)"
+    }
+  },
+  {
+    "name": "Sun-Saturn Trikona Yoga",
+    "description": "Sun placed in trine from Saturn.",
+    "conditions": {
+      "Sun": "in_trikona_from(Saturn)"
+    }
+  },
+  {
+    "name": "Sun-Rahu Trikona Yoga",
+    "description": "Sun placed in trine from Rahu.",
+    "conditions": {
+      "Sun": "in_trikona_from(Rahu)"
+    }
+  },
+  {
+    "name": "Sun-Ketu Trikona Yoga",
+    "description": "Sun placed in trine from Ketu.",
+    "conditions": {
+      "Sun": "in_trikona_from(Ketu)"
+    }
+  },
+  {
+    "name": "Moon-Sun Trikona Yoga",
+    "description": "Moon placed in trine from Sun.",
+    "conditions": {
+      "Moon": "in_trikona_from(Sun)"
+    }
+  },
+  {
+    "name": "Moon-Mars Trikona Yoga",
+    "description": "Moon placed in trine from Mars.",
+    "conditions": {
+      "Moon": "in_trikona_from(Mars)"
+    }
+  },
+  {
+    "name": "Moon-Mercury Trikona Yoga",
+    "description": "Moon placed in trine from Mercury.",
+    "conditions": {
+      "Moon": "in_trikona_from(Mercury)"
+    }
+  },
+  {
+    "name": "Moon-Jupiter Trikona Yoga",
+    "description": "Moon placed in trine from Jupiter.",
+    "conditions": {
+      "Moon": "in_trikona_from(Jupiter)"
+    }
+  },
+  {
+    "name": "Moon-Venus Trikona Yoga",
+    "description": "Moon placed in trine from Venus.",
+    "conditions": {
+      "Moon": "in_trikona_from(Venus)"
+    }
+  },
+  {
+    "name": "Moon-Saturn Trikona Yoga",
+    "description": "Moon placed in trine from Saturn.",
+    "conditions": {
+      "Moon": "in_trikona_from(Saturn)"
+    }
+  },
+  {
+    "name": "Moon-Rahu Trikona Yoga",
+    "description": "Moon placed in trine from Rahu.",
+    "conditions": {
+      "Moon": "in_trikona_from(Rahu)"
+    }
+  },
+  {
+    "name": "Moon-Ketu Trikona Yoga",
+    "description": "Moon placed in trine from Ketu.",
+    "conditions": {
+      "Moon": "in_trikona_from(Ketu)"
+    }
+  },
+  {
+    "name": "Mars-Sun Trikona Yoga",
+    "description": "Mars placed in trine from Sun.",
+    "conditions": {
+      "Mars": "in_trikona_from(Sun)"
+    }
+  },
+  {
+    "name": "Mars-Moon Trikona Yoga",
+    "description": "Mars placed in trine from Moon.",
+    "conditions": {
+      "Mars": "in_trikona_from(Moon)"
+    }
+  },
+  {
+    "name": "Mars-Mercury Trikona Yoga",
+    "description": "Mars placed in trine from Mercury.",
+    "conditions": {
+      "Mars": "in_trikona_from(Mercury)"
+    }
+  },
+  {
+    "name": "Mars-Jupiter Trikona Yoga",
+    "description": "Mars placed in trine from Jupiter.",
+    "conditions": {
+      "Mars": "in_trikona_from(Jupiter)"
+    }
+  },
+  {
+    "name": "Mars-Venus Trikona Yoga",
+    "description": "Mars placed in trine from Venus.",
+    "conditions": {
+      "Mars": "in_trikona_from(Venus)"
+    }
+  },
+  {
+    "name": "Mars-Saturn Trikona Yoga",
+    "description": "Mars placed in trine from Saturn.",
+    "conditions": {
+      "Mars": "in_trikona_from(Saturn)"
+    }
+  },
+  {
+    "name": "Mars-Rahu Trikona Yoga",
+    "description": "Mars placed in trine from Rahu.",
+    "conditions": {
+      "Mars": "in_trikona_from(Rahu)"
+    }
+  },
+  {
+    "name": "Mars-Ketu Trikona Yoga",
+    "description": "Mars placed in trine from Ketu.",
+    "conditions": {
+      "Mars": "in_trikona_from(Ketu)"
+    }
+  },
+  {
+    "name": "Mercury-Sun Trikona Yoga",
+    "description": "Mercury placed in trine from Sun.",
+    "conditions": {
+      "Mercury": "in_trikona_from(Sun)"
+    }
+  },
+  {
+    "name": "Mercury-Moon Trikona Yoga",
+    "description": "Mercury placed in trine from Moon.",
+    "conditions": {
+      "Mercury": "in_trikona_from(Moon)"
+    }
+  },
+  {
+    "name": "Mercury-Mars Trikona Yoga",
+    "description": "Mercury placed in trine from Mars.",
+    "conditions": {
+      "Mercury": "in_trikona_from(Mars)"
+    }
+  },
+  {
+    "name": "Mercury-Jupiter Trikona Yoga",
+    "description": "Mercury placed in trine from Jupiter.",
+    "conditions": {
+      "Mercury": "in_trikona_from(Jupiter)"
+    }
+  },
+  {
+    "name": "Mercury-Venus Trikona Yoga",
+    "description": "Mercury placed in trine from Venus.",
+    "conditions": {
+      "Mercury": "in_trikona_from(Venus)"
+    }
+  },
+  {
+    "name": "Mercury-Saturn Trikona Yoga",
+    "description": "Mercury placed in trine from Saturn.",
+    "conditions": {
+      "Mercury": "in_trikona_from(Saturn)"
+    }
+  },
+  {
+    "name": "Mercury-Rahu Trikona Yoga",
+    "description": "Mercury placed in trine from Rahu.",
+    "conditions": {
+      "Mercury": "in_trikona_from(Rahu)"
+    }
+  },
+  {
+    "name": "Mercury-Ketu Trikona Yoga",
+    "description": "Mercury placed in trine from Ketu.",
+    "conditions": {
+      "Mercury": "in_trikona_from(Ketu)"
+    }
+  },
+  {
+    "name": "Jupiter-Sun Trikona Yoga",
+    "description": "Jupiter placed in trine from Sun.",
+    "conditions": {
+      "Jupiter": "in_trikona_from(Sun)"
+    }
+  },
+  {
+    "name": "Jupiter-Moon Trikona Yoga",
+    "description": "Jupiter placed in trine from Moon.",
+    "conditions": {
+      "Jupiter": "in_trikona_from(Moon)"
+    }
+  },
+  {
+    "name": "Jupiter-Mars Trikona Yoga",
+    "description": "Jupiter placed in trine from Mars.",
+    "conditions": {
+      "Jupiter": "in_trikona_from(Mars)"
+    }
+  },
+  {
+    "name": "Jupiter-Mercury Trikona Yoga",
+    "description": "Jupiter placed in trine from Mercury.",
+    "conditions": {
+      "Jupiter": "in_trikona_from(Mercury)"
+    }
+  },
+  {
+    "name": "Jupiter-Venus Trikona Yoga",
+    "description": "Jupiter placed in trine from Venus.",
+    "conditions": {
+      "Jupiter": "in_trikona_from(Venus)"
+    }
+  },
+  {
+    "name": "Jupiter-Saturn Trikona Yoga",
+    "description": "Jupiter placed in trine from Saturn.",
+    "conditions": {
+      "Jupiter": "in_trikona_from(Saturn)"
+    }
+  },
+  {
+    "name": "Jupiter-Rahu Trikona Yoga",
+    "description": "Jupiter placed in trine from Rahu.",
+    "conditions": {
+      "Jupiter": "in_trikona_from(Rahu)"
+    }
+  },
+  {
+    "name": "Jupiter-Ketu Trikona Yoga",
+    "description": "Jupiter placed in trine from Ketu.",
+    "conditions": {
+      "Jupiter": "in_trikona_from(Ketu)"
+    }
+  },
+  {
+    "name": "Venus-Sun Trikona Yoga",
+    "description": "Venus placed in trine from Sun.",
+    "conditions": {
+      "Venus": "in_trikona_from(Sun)"
+    }
+  },
+  {
+    "name": "Venus-Moon Trikona Yoga",
+    "description": "Venus placed in trine from Moon.",
+    "conditions": {
+      "Venus": "in_trikona_from(Moon)"
+    }
+  },
+  {
+    "name": "Venus-Mars Trikona Yoga",
+    "description": "Venus placed in trine from Mars.",
+    "conditions": {
+      "Venus": "in_trikona_from(Mars)"
+    }
+  },
+  {
+    "name": "Venus-Mercury Trikona Yoga",
+    "description": "Venus placed in trine from Mercury.",
+    "conditions": {
+      "Venus": "in_trikona_from(Mercury)"
+    }
+  },
+  {
+    "name": "Venus-Jupiter Trikona Yoga",
+    "description": "Venus placed in trine from Jupiter.",
+    "conditions": {
+      "Venus": "in_trikona_from(Jupiter)"
+    }
+  },
+  {
+    "name": "Venus-Saturn Trikona Yoga",
+    "description": "Venus placed in trine from Saturn.",
+    "conditions": {
+      "Venus": "in_trikona_from(Saturn)"
+    }
+  },
+  {
+    "name": "Venus-Rahu Trikona Yoga",
+    "description": "Venus placed in trine from Rahu.",
+    "conditions": {
+      "Venus": "in_trikona_from(Rahu)"
+    }
+  },
+  {
+    "name": "Venus-Ketu Trikona Yoga",
+    "description": "Venus placed in trine from Ketu.",
+    "conditions": {
+      "Venus": "in_trikona_from(Ketu)"
+    }
+  },
+  {
+    "name": "Saturn-Sun Trikona Yoga",
+    "description": "Saturn placed in trine from Sun.",
+    "conditions": {
+      "Saturn": "in_trikona_from(Sun)"
+    }
+  },
+  {
+    "name": "Saturn-Moon Trikona Yoga",
+    "description": "Saturn placed in trine from Moon.",
+    "conditions": {
+      "Saturn": "in_trikona_from(Moon)"
+    }
+  },
+  {
+    "name": "Saturn-Mars Trikona Yoga",
+    "description": "Saturn placed in trine from Mars.",
+    "conditions": {
+      "Saturn": "in_trikona_from(Mars)"
+    }
+  },
+  {
+    "name": "Saturn-Mercury Trikona Yoga",
+    "description": "Saturn placed in trine from Mercury.",
+    "conditions": {
+      "Saturn": "in_trikona_from(Mercury)"
+    }
+  },
+  {
+    "name": "Saturn-Jupiter Trikona Yoga",
+    "description": "Saturn placed in trine from Jupiter.",
+    "conditions": {
+      "Saturn": "in_trikona_from(Jupiter)"
+    }
+  },
+  {
+    "name": "Saturn-Venus Trikona Yoga",
+    "description": "Saturn placed in trine from Venus.",
+    "conditions": {
+      "Saturn": "in_trikona_from(Venus)"
+    }
+  },
+  {
+    "name": "Saturn-Rahu Trikona Yoga",
+    "description": "Saturn placed in trine from Rahu.",
+    "conditions": {
+      "Saturn": "in_trikona_from(Rahu)"
+    }
+  },
+  {
+    "name": "Saturn-Ketu Trikona Yoga",
+    "description": "Saturn placed in trine from Ketu.",
+    "conditions": {
+      "Saturn": "in_trikona_from(Ketu)"
+    }
+  },
+  {
+    "name": "Sun Aspect of Jupiter Yoga",
+    "description": "Sun receives aspect from Jupiter.",
+    "conditions": {
+      "Sun": "is_aspected_by(Jupiter)"
+    }
+  },
+  {
+    "name": "Sun Aspect of Venus Yoga",
+    "description": "Sun receives aspect from Venus.",
+    "conditions": {
+      "Sun": "is_aspected_by(Venus)"
+    }
+  },
+  {
+    "name": "Sun Aspect of Mercury Yoga",
+    "description": "Sun receives aspect from Mercury.",
+    "conditions": {
+      "Sun": "is_aspected_by(Mercury)"
+    }
+  },
+  {
+    "name": "Sun Aspect of Mars Yoga",
+    "description": "Sun receives aspect from Mars.",
+    "conditions": {
+      "Sun": "is_aspected_by(Mars)"
+    }
+  },
+  {
+    "name": "Sun Aspect of Saturn Yoga",
+    "description": "Sun receives aspect from Saturn.",
+    "conditions": {
+      "Sun": "is_aspected_by(Saturn)"
+    }
+  },
+  {
+    "name": "Sun Aspect of Moon Yoga",
+    "description": "Sun receives aspect from Moon.",
+    "conditions": {
+      "Sun": "is_aspected_by(Moon)"
+    }
+  },
+  {
+    "name": "Sun Aspect of Rahu Yoga",
+    "description": "Sun receives aspect from Rahu.",
+    "conditions": {
+      "Sun": "is_aspected_by(Rahu)"
+    }
+  },
+  {
+    "name": "Sun Aspect of Ketu Yoga",
+    "description": "Sun receives aspect from Ketu.",
+    "conditions": {
+      "Sun": "is_aspected_by(Ketu)"
+    }
+  },
+  {
+    "name": "Moon Aspect of Jupiter Yoga",
+    "description": "Moon receives aspect from Jupiter.",
+    "conditions": {
+      "Moon": "is_aspected_by(Jupiter)"
+    }
+  },
+  {
+    "name": "Moon Aspect of Venus Yoga",
+    "description": "Moon receives aspect from Venus.",
+    "conditions": {
+      "Moon": "is_aspected_by(Venus)"
+    }
+  },
+  {
+    "name": "Moon Aspect of Mercury Yoga",
+    "description": "Moon receives aspect from Mercury.",
+    "conditions": {
+      "Moon": "is_aspected_by(Mercury)"
+    }
+  },
+  {
+    "name": "Moon Aspect of Mars Yoga",
+    "description": "Moon receives aspect from Mars.",
+    "conditions": {
+      "Moon": "is_aspected_by(Mars)"
+    }
+  },
+  {
+    "name": "Moon Aspect of Saturn Yoga",
+    "description": "Moon receives aspect from Saturn.",
+    "conditions": {
+      "Moon": "is_aspected_by(Saturn)"
+    }
+  },
+  {
+    "name": "Moon Aspect of Sun Yoga",
+    "description": "Moon receives aspect from Sun.",
+    "conditions": {
+      "Moon": "is_aspected_by(Sun)"
+    }
+  },
+  {
+    "name": "Moon Aspect of Rahu Yoga",
+    "description": "Moon receives aspect from Rahu.",
+    "conditions": {
+      "Moon": "is_aspected_by(Rahu)"
+    }
+  },
+  {
+    "name": "Moon Aspect of Ketu Yoga",
+    "description": "Moon receives aspect from Ketu.",
+    "conditions": {
+      "Moon": "is_aspected_by(Ketu)"
+    }
+  },
+  {
+    "name": "Mars Aspect of Jupiter Yoga",
+    "description": "Mars receives aspect from Jupiter.",
+    "conditions": {
+      "Mars": "is_aspected_by(Jupiter)"
+    }
+  },
+  {
+    "name": "Mars Aspect of Venus Yoga",
+    "description": "Mars receives aspect from Venus.",
+    "conditions": {
+      "Mars": "is_aspected_by(Venus)"
+    }
+  },
+  {
+    "name": "Mars Aspect of Mercury Yoga",
+    "description": "Mars receives aspect from Mercury.",
+    "conditions": {
+      "Mars": "is_aspected_by(Mercury)"
+    }
+  },
+  {
+    "name": "Mars Aspect of Saturn Yoga",
+    "description": "Mars receives aspect from Saturn.",
+    "conditions": {
+      "Mars": "is_aspected_by(Saturn)"
+    }
+  },
+  {
+    "name": "Mars Aspect of Sun Yoga",
+    "description": "Mars receives aspect from Sun.",
+    "conditions": {
+      "Mars": "is_aspected_by(Sun)"
+    }
+  },
+  {
+    "name": "Mars Aspect of Moon Yoga",
+    "description": "Mars receives aspect from Moon.",
+    "conditions": {
+      "Mars": "is_aspected_by(Moon)"
+    }
+  },
+  {
+    "name": "Mars Aspect of Rahu Yoga",
+    "description": "Mars receives aspect from Rahu.",
+    "conditions": {
+      "Mars": "is_aspected_by(Rahu)"
+    }
+  },
+  {
+    "name": "Mars Aspect of Ketu Yoga",
+    "description": "Mars receives aspect from Ketu.",
+    "conditions": {
+      "Mars": "is_aspected_by(Ketu)"
+    }
+  },
+  {
+    "name": "Mercury Aspect of Jupiter Yoga",
+    "description": "Mercury receives aspect from Jupiter.",
+    "conditions": {
+      "Mercury": "is_aspected_by(Jupiter)"
+    }
+  },
+  {
+    "name": "Mercury Aspect of Venus Yoga",
+    "description": "Mercury receives aspect from Venus.",
+    "conditions": {
+      "Mercury": "is_aspected_by(Venus)"
+    }
+  },
+  {
+    "name": "Mercury Aspect of Mars Yoga",
+    "description": "Mercury receives aspect from Mars.",
+    "conditions": {
+      "Mercury": "is_aspected_by(Mars)"
+    }
+  },
+  {
+    "name": "Mercury Aspect of Saturn Yoga",
+    "description": "Mercury receives aspect from Saturn.",
+    "conditions": {
+      "Mercury": "is_aspected_by(Saturn)"
+    }
+  },
+  {
+    "name": "Mercury Aspect of Sun Yoga",
+    "description": "Mercury receives aspect from Sun.",
+    "conditions": {
+      "Mercury": "is_aspected_by(Sun)"
+    }
+  },
+  {
+    "name": "Mercury Aspect of Moon Yoga",
+    "description": "Mercury receives aspect from Moon.",
+    "conditions": {
+      "Mercury": "is_aspected_by(Moon)"
+    }
+  },
+  {
+    "name": "Mercury Aspect of Rahu Yoga",
+    "description": "Mercury receives aspect from Rahu.",
+    "conditions": {
+      "Mercury": "is_aspected_by(Rahu)"
+    }
+  },
+  {
+    "name": "Mercury Aspect of Ketu Yoga",
+    "description": "Mercury receives aspect from Ketu.",
+    "conditions": {
+      "Mercury": "is_aspected_by(Ketu)"
+    }
+  },
+  {
+    "name": "Jupiter Aspect of Venus Yoga",
+    "description": "Jupiter receives aspect from Venus.",
+    "conditions": {
+      "Jupiter": "is_aspected_by(Venus)"
+    }
+  },
+  {
+    "name": "Jupiter Aspect of Mercury Yoga",
+    "description": "Jupiter receives aspect from Mercury.",
+    "conditions": {
+      "Jupiter": "is_aspected_by(Mercury)"
+    }
+  },
+  {
+    "name": "Jupiter Aspect of Mars Yoga",
+    "description": "Jupiter receives aspect from Mars.",
+    "conditions": {
+      "Jupiter": "is_aspected_by(Mars)"
+    }
+  },
+  {
+    "name": "Jupiter Aspect of Saturn Yoga",
+    "description": "Jupiter receives aspect from Saturn.",
+    "conditions": {
+      "Jupiter": "is_aspected_by(Saturn)"
+    }
+  },
+  {
+    "name": "Jupiter Aspect of Sun Yoga",
+    "description": "Jupiter receives aspect from Sun.",
+    "conditions": {
+      "Jupiter": "is_aspected_by(Sun)"
+    }
+  },
+  {
+    "name": "Jupiter Aspect of Moon Yoga",
+    "description": "Jupiter receives aspect from Moon.",
+    "conditions": {
+      "Jupiter": "is_aspected_by(Moon)"
+    }
+  },
+  {
+    "name": "Jupiter Aspect of Rahu Yoga",
+    "description": "Jupiter receives aspect from Rahu.",
+    "conditions": {
+      "Jupiter": "is_aspected_by(Rahu)"
+    }
+  },
+  {
+    "name": "Jupiter Aspect of Ketu Yoga",
+    "description": "Jupiter receives aspect from Ketu.",
+    "conditions": {
+      "Jupiter": "is_aspected_by(Ketu)"
+    }
+  },
+  {
+    "name": "Venus Aspect of Jupiter Yoga",
+    "description": "Venus receives aspect from Jupiter.",
+    "conditions": {
+      "Venus": "is_aspected_by(Jupiter)"
+    }
+  },
+  {
+    "name": "Venus Aspect of Mercury Yoga",
+    "description": "Venus receives aspect from Mercury.",
+    "conditions": {
+      "Venus": "is_aspected_by(Mercury)"
+    }
+  },
+  {
+    "name": "Venus Aspect of Mars Yoga",
+    "description": "Venus receives aspect from Mars.",
+    "conditions": {
+      "Venus": "is_aspected_by(Mars)"
+    }
+  },
+  {
+    "name": "Venus Aspect of Saturn Yoga",
+    "description": "Venus receives aspect from Saturn.",
+    "conditions": {
+      "Venus": "is_aspected_by(Saturn)"
+    }
+  },
+  {
+    "name": "Venus Aspect of Sun Yoga",
+    "description": "Venus receives aspect from Sun.",
+    "conditions": {
+      "Venus": "is_aspected_by(Sun)"
+    }
+  },
+  {
+    "name": "Venus Aspect of Moon Yoga",
+    "description": "Venus receives aspect from Moon.",
+    "conditions": {
+      "Venus": "is_aspected_by(Moon)"
+    }
+  },
+  {
+    "name": "Venus Aspect of Rahu Yoga",
+    "description": "Venus receives aspect from Rahu.",
+    "conditions": {
+      "Venus": "is_aspected_by(Rahu)"
+    }
+  },
+  {
+    "name": "Venus Aspect of Ketu Yoga",
+    "description": "Venus receives aspect from Ketu.",
+    "conditions": {
+      "Venus": "is_aspected_by(Ketu)"
+    }
+  },
+  {
+    "name": "Saturn Aspect of Jupiter Yoga",
+    "description": "Saturn receives aspect from Jupiter.",
+    "conditions": {
+      "Saturn": "is_aspected_by(Jupiter)"
+    }
+  },
+  {
+    "name": "Saturn Aspect of Venus Yoga",
+    "description": "Saturn receives aspect from Venus.",
+    "conditions": {
+      "Saturn": "is_aspected_by(Venus)"
+    }
+  },
+  {
+    "name": "Saturn Aspect of Mercury Yoga",
+    "description": "Saturn receives aspect from Mercury.",
+    "conditions": {
+      "Saturn": "is_aspected_by(Mercury)"
+    }
+  },
+  {
+    "name": "Saturn Aspect of Mars Yoga",
+    "description": "Saturn receives aspect from Mars.",
+    "conditions": {
+      "Saturn": "is_aspected_by(Mars)"
+    }
+  },
+  {
+    "name": "Saturn Aspect of Sun Yoga",
+    "description": "Saturn receives aspect from Sun.",
+    "conditions": {
+      "Saturn": "is_aspected_by(Sun)"
+    }
+  },
+  {
+    "name": "Saturn Aspect of Moon Yoga",
+    "description": "Saturn receives aspect from Moon.",
+    "conditions": {
+      "Saturn": "is_aspected_by(Moon)"
+    }
+  },
+  {
+    "name": "Saturn Aspect of Rahu Yoga",
+    "description": "Saturn receives aspect from Rahu.",
+    "conditions": {
+      "Saturn": "is_aspected_by(Rahu)"
+    }
+  },
+  {
+    "name": "Saturn Aspect of Ketu Yoga",
+    "description": "Saturn receives aspect from Ketu.",
+    "conditions": {
+      "Saturn": "is_aspected_by(Ketu)"
+    }
+  },
+  {
+    "name": "Mercury Combust Yoga",
+    "description": "Mercury becomes combust near the Sun.",
+    "conditions": {
+      "Mercury": "is_combust()"
+    }
+  },
+  {
+    "name": "Venus Combust Yoga",
+    "description": "Venus becomes combust near the Sun.",
+    "conditions": {
+      "Venus": "is_combust()"
+    }
+  },
+  {
+    "name": "Mars Combust Yoga",
+    "description": "Mars becomes combust near the Sun.",
+    "conditions": {
+      "Mars": "is_combust()"
+    }
+  },
+  {
+    "name": "Saturn Combust Yoga",
+    "description": "Saturn becomes combust near the Sun.",
+    "conditions": {
+      "Saturn": "is_combust()"
+    }
+  },
+  {
+    "name": "Jupiter Combust Yoga",
+    "description": "Jupiter becomes combust near the Sun.",
+    "conditions": {
+      "Jupiter": "is_combust()"
+    }
   }
 ]
