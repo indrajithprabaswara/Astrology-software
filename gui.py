@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict, Optional, Sequence
 
 import pandas as pd
 from PyQt5.QtWidgets import (
@@ -22,25 +22,216 @@ from PyQt5.QtWidgets import (
     QMainWindow,
     QMessageBox,
     QPushButton,
+    QStyle,
+    QTableView,
     QTabWidget,
     QTextEdit,
     QTimeEdit,
+    QToolTip,
     QVBoxLayout,
     QWidget,
 )
-from PyQt5.QtCore import QPointF, QRectF, Qt
-from PyQt5.QtGui import QFont, QPainter, QPen
+from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QPoint, QPointF, QRectF, Qt
+from PyQt5.QtGui import QColor, QFont, QLinearGradient, QPainter, QPen
 from PyQt5.QtChart import QBarCategoryAxis, QBarSet, QChart, QChartView, QPercentBarSeries
+from PyQt5.QtCore import QSortFilterProxyModel, QVariant
+from PyQt5.QtWidgets import QHeaderView
 
 from ai import AIPredictor
 from dasha import compute_vimshottari, periods_to_dataframe
-from ephemeris import EphemerisCalculator, positions_dataframe
+from ephemeris import EphemerisCalculator, PlanetPosition, positions_dataframe
 from panchang import PanchangCalculator
 from storage import KundaliRecord, load_kundali, save_kundali
 from strength import StrengthCalculator
 from varga import VargaCalculator, ZODIAC_SIGNS
 from yoga import YogaDetector
 from ashtakavarga import AshtakavargaCalculator
+
+
+PLANET_GLYPHS = {
+    "Sun": "\u2609",
+    "Moon": "\u263D",
+    "Mars": "\u2642",
+    "Mercury": "\u263F",
+    "Jupiter": "\u2643",
+    "Venus": "\u2640",
+    "Saturn": "\u2644",
+    "Rahu": "\u260A",
+    "Ketu": "\u260B",
+    "Uranus": "\u26E2",
+    "Neptune": "\u2646",
+    "Pluto": "\u2647",
+}
+
+NAKSHATRA_DATA: Sequence[tuple[str, str]] = (
+    ("Ashwini", "Ketu"),
+    ("Bharani", "Venus"),
+    ("Krittika", "Sun"),
+    ("Rohini", "Moon"),
+    ("Mrigashira", "Mars"),
+    ("Ardra", "Rahu"),
+    ("Punarvasu", "Jupiter"),
+    ("Pushya", "Saturn"),
+    ("Ashlesha", "Mercury"),
+    ("Magha", "Ketu"),
+    ("Purva Phalguni", "Venus"),
+    ("Uttara Phalguni", "Sun"),
+    ("Hasta", "Moon"),
+    ("Chitra", "Mars"),
+    ("Swati", "Rahu"),
+    ("Vishakha", "Jupiter"),
+    ("Anuradha", "Saturn"),
+    ("Jyeshtha", "Mercury"),
+    ("Mula", "Ketu"),
+    ("Purva Ashadha", "Venus"),
+    ("Uttara Ashadha", "Sun"),
+    ("Shravana", "Moon"),
+    ("Dhanishta", "Mars"),
+    ("Shatabhisha", "Rahu"),
+    ("Purva Bhadrapada", "Jupiter"),
+    ("Uttara Bhadrapada", "Saturn"),
+    ("Revati", "Mercury"),
+)
+
+SIGN_LORDS = {
+    "Aries": "Mars",
+    "Taurus": "Venus",
+    "Gemini": "Mercury",
+    "Cancer": "Moon",
+    "Leo": "Sun",
+    "Virgo": "Mercury",
+    "Libra": "Venus",
+    "Scorpio": "Mars",
+    "Sagittarius": "Jupiter",
+    "Capricorn": "Saturn",
+    "Aquarius": "Saturn",
+    "Pisces": "Jupiter",
+}
+
+EXALTATION_SIGNS = {
+    "Sun": ("Aries", 10.0),
+    "Moon": ("Taurus", 3.0),
+    "Mars": ("Capricorn", 28.0),
+    "Mercury": ("Virgo", 15.0),
+    "Jupiter": ("Cancer", 5.0),
+    "Venus": ("Pisces", 27.0),
+    "Saturn": ("Libra", 20.0),
+}
+
+DEBILITATION_SIGNS = {
+    "Sun": ("Libra", 10.0),
+    "Moon": ("Scorpio", 3.0),
+    "Mars": ("Cancer", 28.0),
+    "Mercury": ("Pisces", 15.0),
+    "Jupiter": ("Capricorn", 5.0),
+    "Venus": ("Virgo", 27.0),
+    "Saturn": ("Aries", 20.0),
+}
+
+OWN_SIGNS = {
+    "Sun": {"Leo"},
+    "Moon": {"Cancer"},
+    "Mars": {"Aries", "Scorpio"},
+    "Mercury": {"Gemini", "Virgo"},
+    "Jupiter": {"Sagittarius", "Pisces"},
+    "Venus": {"Taurus", "Libra"},
+    "Saturn": {"Capricorn", "Aquarius"},
+}
+
+
+def format_dms(degrees: float) -> str:
+    deg = int(degrees)
+    minutes_full = (degrees - deg) * 60
+    minutes = int(minutes_full)
+    seconds = int(round((minutes_full - minutes) * 60))
+    if seconds == 60:
+        seconds = 0
+        minutes += 1
+    if minutes == 60:
+        minutes = 0
+        deg += 1
+    return f"{deg:02d}° {minutes:02d}' {seconds:02d}\""
+
+
+def nakshatra_details(longitude: float) -> tuple[str, int, str]:
+    segment = 360.0 / len(NAKSHATRA_DATA)
+    index = int(longitude // segment) % len(NAKSHATRA_DATA)
+    within = (longitude % segment) / segment
+    pada = int(within * 4) + 1
+    name, lord = NAKSHATRA_DATA[index]
+    return name, pada, lord
+
+
+def planetary_dignity(planet: str, sign: str, degree_in_sign: float) -> str:
+    exalt = EXALTATION_SIGNS.get(planet)
+    if exalt and exalt[0] == sign:
+        return "Exalted"
+    deb = DEBILITATION_SIGNS.get(planet)
+    if deb and deb[0] == sign:
+        return "Debilitated"
+    if planet in OWN_SIGNS and sign in OWN_SIGNS[planet]:
+        return "Own Sign"
+    lord = SIGN_LORDS.get(sign)
+    if lord:
+        relation = "Friendly" if lord in OWN_SIGNS.get(planet, set()) else "Neutral"
+        return f"{relation} Sign"
+    return "Neutral"
+
+
+class DataFrameModel(QAbstractTableModel):
+    """Model adapter that exposes a pandas DataFrame to Qt views."""
+
+    def __init__(self, parent: Optional[QWidget] = None) -> None:
+        super().__init__(parent)
+        self._frame = pd.DataFrame()
+
+    def set_frame(self, frame: pd.DataFrame) -> None:
+        self.beginResetModel()
+        self._frame = frame.copy()
+        self.endResetModel()
+
+    def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:  # type: ignore[override]
+        if parent.isValid():
+            return 0
+        return len(self._frame.index)
+
+    def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:  # type: ignore[override]
+        if parent.isValid():
+            return 0
+        return len(self._frame.columns)
+
+    def data(self, index: QModelIndex, role: int = Qt.DisplayRole):  # type: ignore[override]
+        if not index.isValid():
+            return QVariant()
+        value = self._frame.iat[index.row(), index.column()]
+        if role in (Qt.DisplayRole, Qt.EditRole):
+            if pd.isna(value):
+                return ""
+            if isinstance(value, float):
+                return f"{value:.4f}"
+            return str(value)
+        return QVariant()
+
+    def headerData(self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole):  # type: ignore[override]
+        if role != Qt.DisplayRole:
+            return QVariant()
+        if orientation == Qt.Horizontal:
+            try:
+                return str(self._frame.columns[section])
+            except IndexError:
+                return QVariant()
+        try:
+            return str(self._frame.index[section])
+        except IndexError:
+            return QVariant()
+
+    def sort(self, column: int, order: Qt.SortOrder = Qt.AscendingOrder) -> None:  # type: ignore[override]
+        if not 0 <= column < len(self._frame.columns):
+            return
+        ascending = order == Qt.AscendingOrder
+        self.layoutAboutToBeChanged.emit()
+        self._frame = self._frame.sort_values(self._frame.columns[column], ascending=ascending)
+        self.layoutChanged.emit()
 
 
 class ChartWidget(QWidget):
@@ -52,10 +243,23 @@ class ChartWidget(QWidget):
         self.chart_style = "North"
         self.positions: Dict[str, float] = {}
         self.houses: Dict[str, float] = {}
+        self.planet_details: Dict[str, Dict[str, str]] = {}
+        self.house_details: Dict[str, Dict[str, str]] = {}
+        self._planet_rects: Dict[str, QRectF] = {}
+        self._house_rects: Dict[str, QRectF] = {}
+        self.setMouseTracking(True)
 
-    def set_chart_data(self, positions: Dict[str, float], houses: Dict[str, float]) -> None:
+    def set_chart_data(
+        self,
+        positions: Dict[str, float],
+        houses: Dict[str, float],
+        planet_details: Optional[Dict[str, Dict[str, str]]] = None,
+        house_details: Optional[Dict[str, Dict[str, str]]] = None,
+    ) -> None:
         self.positions = positions
         self.houses = houses
+        self.planet_details = planet_details or {}
+        self.house_details = house_details or {}
         self.update()
 
     def set_chart_style(self, style: str) -> None:
@@ -66,7 +270,10 @@ class ChartWidget(QWidget):
     def paintEvent(self, event) -> None:  # type: ignore[override]
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
-        painter.fillRect(self.rect(), Qt.white)
+        gradient = QLinearGradient(0, 0, 0, self.height())
+        gradient.setColorAt(0.0, QColor(248, 249, 255))
+        gradient.setColorAt(1.0, QColor(224, 228, 240))
+        painter.fillRect(self.rect(), gradient)
 
         width = self.width()
         height = self.height()
@@ -109,19 +316,35 @@ class ChartWidget(QWidget):
         painter.drawLine(mid_bottom, mid_left)
         painter.drawLine(mid_left, mid_top)
 
-        painter.setFont(QFont("Arial", 10))
+        painter.setFont(QFont("Arial", 11))
 
         house_boxes = self._north_house_rects(outer_rect)
+        self._house_rects = house_boxes
         for idx, rect in house_boxes.items():
+            fill = QColor(255, 255, 255, 200) if idx % 2 else QColor(230, 236, 248, 190)
+            painter.fillRect(rect, fill)
             painter.drawText(rect, Qt.AlignCenter, str(idx))
 
         painter.setPen(QPen(Qt.darkBlue))
+        self._planet_rects = {}
         for planet, longitude in self.positions.items():
             house = self._determine_house(longitude)
             target_rect = house_boxes.get(house)
             if target_rect is None:
                 continue
-            painter.drawText(target_rect.adjusted(0, 10, 0, 0), Qt.AlignTop | Qt.AlignHCenter, planet[:2])
+            text = PLANET_GLYPHS.get(planet, planet[:2])
+            if self.planet_details.get(planet, {}).get("retrograde") == "Yes":
+                text = f"{text}\u211E"
+            rect = target_rect.adjusted(0, 10, 0, 0)
+            painter.drawText(rect, Qt.AlignTop | Qt.AlignHCenter, text)
+            metrics = painter.fontMetrics()
+            text_rect = QRectF(
+                rect.center().x() - metrics.horizontalAdvance(text) / 2,
+                rect.top(),
+                metrics.horizontalAdvance(text),
+                metrics.height(),
+            )
+            self._planet_rects[planet] = text_rect
 
     def _north_house_rects(self, outer_rect: QRectF) -> Dict[int, QRectF]:
         cell_w = outer_rect.width() / 4
@@ -154,18 +377,34 @@ class ChartWidget(QWidget):
             painter.drawLine(top_left_x, top_left_y + i * cell_h, top_left_x + size, top_left_y + i * cell_h)
             painter.drawLine(top_left_x + i * cell_w, top_left_y, top_left_x + i * cell_w, top_left_y + size)
 
-        painter.setFont(QFont("Arial", 10))
+        painter.setFont(QFont("Arial", 11))
         house_mapping = self._south_house_rects(top_left_x, top_left_y, cell_w, cell_h)
+        self._house_rects = house_mapping
         for idx, rect in house_mapping.items():
+            fill = QColor(255, 255, 255, 200) if idx % 2 else QColor(230, 236, 248, 190)
+            painter.fillRect(rect, fill)
             painter.drawText(rect, Qt.AlignCenter, str(idx))
 
         painter.setPen(QPen(Qt.darkBlue))
+        self._planet_rects = {}
         for planet, longitude in self.positions.items():
             house = self._determine_house(longitude)
             target_rect = house_mapping.get(house)
             if target_rect is None:
                 continue
-            painter.drawText(target_rect.adjusted(0, 10, 0, 0), Qt.AlignTop | Qt.AlignHCenter, planet[:2])
+            text = PLANET_GLYPHS.get(planet, planet[:2])
+            if self.planet_details.get(planet, {}).get("retrograde") == "Yes":
+                text = f"{text}\u211E"
+            rect = target_rect.adjusted(0, 10, 0, 0)
+            painter.drawText(rect, Qt.AlignTop | Qt.AlignHCenter, text)
+            metrics = painter.fontMetrics()
+            text_rect = QRectF(
+                rect.center().x() - metrics.horizontalAdvance(text) / 2,
+                rect.top(),
+                metrics.horizontalAdvance(text),
+                metrics.height(),
+            )
+            self._planet_rects[planet] = text_rect
 
     def _south_house_rects(self, top_left_x: float, top_left_y: float, cell_w: float, cell_h: float) -> Dict[int, QRectF]:
         rects: Dict[int, QRectF] = {}
@@ -184,20 +423,69 @@ class ChartWidget(QWidget):
         asc = self.houses.get("House 1", self.houses.get("Asc", 0.0))
         relative = (longitude - asc + 360.0) % 360.0
         return int(relative // 30) + 1
+
+    def mouseMoveEvent(self, event):  # type: ignore[override]
+        point: QPoint = event.pos()
+        for planet, rect in self._planet_rects.items():
+            if rect.contains(point):
+                detail = self.planet_details.get(planet)
+                if detail:
+                    tooltip = (
+                        f"<b>{planet}</b><br>"
+                        f"Longitude: {detail.get('longitude_dms')}<br>"
+                        f"Nakshatra: {detail.get('nakshatra')} Pada {detail.get('pada')}<br>"
+                        f"Lord: {detail.get('nakshatra_lord')}<br>"
+                        f"Dignity: {detail.get('dignity')}"
+                    )
+                    QToolTip.showText(event.globalPos(), tooltip, self)
+                    return
+        for house, rect in self._house_rects.items():
+            if rect.contains(point):
+                key = str(house)
+                detail = self.house_details.get(key) or self.house_details.get(house)
+                if detail:
+                    tooltip = (
+                        f"<b>{house}</b><br>"
+                        f"Sign: {detail.get('sign')}<br>"
+                        f"Cusp: {detail.get('longitude_dms')}<br>"
+                        f"Lord: {detail.get('lord')}"
+                    )
+                    QToolTip.showText(event.globalPos(), tooltip, self)
+                    return
+        QToolTip.hideText()
 class DataTab(QWidget):
     def __init__(self, title: str) -> None:
         super().__init__()
         self.title = title
         self.layout = QVBoxLayout(self)
-        self.text = QTextEdit()
-        self.text.setReadOnly(True)
-        self.layout.addWidget(self.text)
+        self.table = QTableView()
+        self.table.setAlternatingRowColors(True)
+        self.table.setSortingEnabled(True)
+        header = self.table.horizontalHeader()
+        header.setStretchLastSection(True)
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.table.verticalHeader().setVisible(False)
+        self.table.setSelectionBehavior(QTableView.SelectRows)
+        self.table.setEditTriggers(QTableView.NoEditTriggers)
+        self.proxy = QSortFilterProxyModel(self)
+        self.model = DataFrameModel(self)
+        self.proxy.setSourceModel(self.model)
+        self.table.setModel(self.proxy)
+        self.layout.addWidget(self.table)
+        self.placeholder = QLabel("No data available.")
+        self.placeholder.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.placeholder)
+        self.placeholder.hide()
 
     def update_data(self, df: pd.DataFrame) -> None:
         if df is None or df.empty:
-            self.text.setPlainText("No data available.")
+            self.model.set_frame(pd.DataFrame())
+            self.table.hide()
+            self.placeholder.show()
         else:
-            self.text.setPlainText(df.to_string(index=False))
+            self.model.set_frame(df.reset_index(drop=True))
+            self.table.show()
+            self.placeholder.hide()
 
 
 class ShadbalaChartTab(QWidget):
@@ -393,7 +681,10 @@ class MainWindow(QMainWindow):
         self.chart_style = "North"
         self._current_houses: Dict[str, float] = {}
         self._current_positions: Dict[str, float] = {}
+        self._current_planet_details: Dict[str, Dict[str, str]] = {}
+        self._current_house_details: Dict[str, Dict[str, str]] = {}
         self._build_ui()
+        self._apply_theme()
 
     def _build_ui(self) -> None:
         central = QWidget()
@@ -432,6 +723,11 @@ class MainWindow(QMainWindow):
         save_button.clicked.connect(self.save_kundali)
         load_button = QPushButton("Load")
         load_button.clicked.connect(self.load_kundali)
+        style = self.style()
+        compute_button.setIcon(style.standardIcon(QStyle.SP_MediaPlay))
+        settings_button.setIcon(style.standardIcon(QStyle.SP_FileDialogDetailedView))
+        save_button.setIcon(style.standardIcon(QStyle.SP_DialogSaveButton))
+        load_button.setIcon(style.standardIcon(QStyle.SP_DialogOpenButton))
         button_layout.addWidget(compute_button)
         button_layout.addWidget(settings_button)
         button_layout.addWidget(save_button)
@@ -468,6 +764,8 @@ class MainWindow(QMainWindow):
         chart_layout.addWidget(self.varga_combo)
 
         self.chart_canvas = ChartWidget()
+        self.chart_canvas.setObjectName("chartCanvas")
+        self.chart_canvas.set_chart_style(self.chart_style)
         chart_layout.addWidget(self.chart_canvas)
         self.varga_combo.currentTextChanged.connect(self.update_chart_view)
         self.tabs.addTab(self.chart_tab, "Chart")
@@ -493,6 +791,80 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.ai_tab, "AI Prediction")
         layout.addWidget(self.tabs)
 
+    def _apply_theme(self) -> None:
+        self.setStyleSheet(
+            """
+            QMainWindow {
+                background-color: #f4f6fb;
+            }
+            QWidget {
+                font-family: 'Segoe UI';
+                font-size: 10pt;
+            }
+            QGroupBox {
+                border: 1px solid #c7d3ef;
+                border-radius: 8px;
+                margin-top: 10px;
+                padding: 12px;
+                background-color: rgba(255, 255, 255, 210);
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 12px;
+                padding: 0 4px;
+                color: #1c2541;
+                font-weight: 600;
+            }
+            QPushButton {
+                background-color: #3d7eff;
+                border-radius: 6px;
+                color: white;
+                padding: 6px 14px;
+            }
+            QPushButton:hover {
+                background-color: #315fcc;
+            }
+            QPushButton:pressed {
+                background-color: #264da6;
+            }
+            QPushButton:disabled {
+                background-color: #aebbdc;
+                color: #f0f3ff;
+            }
+            QTabWidget::pane {
+                border: 1px solid #c7d3ef;
+                border-radius: 8px;
+                background: #ffffff;
+            }
+            QTabBar::tab {
+                background: #e2e6f5;
+                color: #1c2541;
+                padding: 8px 18px;
+                margin: 2px;
+                border-radius: 6px;
+            }
+            QTabBar::tab:selected {
+                background: #ffffff;
+                font-weight: 600;
+            }
+            QTableView {
+                background: #ffffff;
+                alternate-background-color: #eef2fb;
+                gridline-color: #d0d8ea;
+                border: none;
+            }
+            QHeaderView::section {
+                background: #dde3f6;
+                padding: 6px;
+                border: none;
+                font-weight: 600;
+            }
+            #chartCanvas {
+                background: transparent;
+            }
+            """
+        )
+
     # ------------------------------------------------------------------
     def compute_kundali(self) -> None:
         date = self.date_edit.date().toPyDate()
@@ -517,6 +889,8 @@ class MainWindow(QMainWindow):
         self.varga_details = varga_details
         self._current_houses = houses
         self._current_positions = chart_positions
+        self._current_planet_details = self._planet_details_from_positions(positions)
+        self._current_house_details = self._house_details_from_cusps(houses)
         self.chart_canvas.set_chart_style(self.chart_style)
         self.graha_tab.update_data(graha_df)
         self.upagraha_tab.update_data(upagraha_df)
@@ -590,8 +964,12 @@ class MainWindow(QMainWindow):
 
         if not chart_positions:
             chart_positions = getattr(self, "_current_positions", {})
+            planet_details = getattr(self, "_current_planet_details", {})
+        else:
+            planet_details = self._planet_details_from_longitudes(chart_positions)
 
-        self.chart_canvas.set_chart_data(chart_positions, houses)
+        house_details = getattr(self, "_current_house_details", {})
+        self.chart_canvas.set_chart_data(chart_positions, houses, planet_details, house_details)
 
     def save_kundali(self) -> None:
         if not hasattr(self, "current_record"):
@@ -616,6 +994,50 @@ class MainWindow(QMainWindow):
         self.shadbala_tab.update_data(pd.DataFrame(record.strengths.get("shadbala", [])))
         self.bhavabala_tab.update_data(pd.DataFrame(record.strengths.get("bhavabala", [])))
         self.compute_kundali()
+
+
+    def _planet_detail_entry(self, planet: str, longitude: float, retrograde: bool) -> Dict[str, str]:
+        sign_index = int(longitude // 30) % len(ZODIAC_SIGNS)
+        sign = ZODIAC_SIGNS[sign_index]
+        degree_in_sign = longitude % 30
+        nakshatra, pada, lord = nakshatra_details(longitude)
+        return {
+            "longitude_dms": format_dms(longitude),
+            "nakshatra": nakshatra,
+            "pada": str(pada),
+            "nakshatra_lord": lord,
+            "dignity": planetary_dignity(planet, sign, degree_in_sign),
+            "retrograde": "Yes" if retrograde else "No",
+        }
+
+    def _planet_details_from_positions(self, positions: Dict[str, PlanetPosition]) -> Dict[str, Dict[str, str]]:
+        details: Dict[str, Dict[str, str]] = {}
+        for planet, data in positions.items():
+            details[planet] = self._planet_detail_entry(planet, data.longitude, data.retrograde)
+        return details
+
+    def _planet_details_from_longitudes(self, longitudes: Dict[str, float]) -> Dict[str, Dict[str, str]]:
+        details: Dict[str, Dict[str, str]] = {}
+        for planet, longitude in longitudes.items():
+            details[planet] = self._planet_detail_entry(planet, longitude, False)
+        return details
+
+    def _house_details_from_cusps(self, houses: Dict[str, float]) -> Dict[str, Dict[str, str]]:
+        details: Dict[str, Dict[str, str]] = {}
+        for idx in range(1, 13):
+            key = f"House {idx}"
+            longitude = houses.get(key)
+            if longitude is None:
+                continue
+            sign = ZODIAC_SIGNS[int(longitude // 30) % len(ZODIAC_SIGNS)]
+            entry = {
+                "sign": sign,
+                "longitude_dms": format_dms(longitude),
+                "lord": SIGN_LORDS.get(sign, ""),
+            }
+            details[key] = entry
+            details[str(idx)] = entry
+        return details
 
 
 def run_app() -> None:
